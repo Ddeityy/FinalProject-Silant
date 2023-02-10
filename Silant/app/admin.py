@@ -1,11 +1,10 @@
 from django.contrib import admin
-from .models import *
+from django.apps import apps
 
-admin.site.register(Car)
-admin.site.register(CarDetail)
-admin.site.register(Maitenance)
-admin.site.register(MaitenanceDetail)
-admin.site.register(Repair)
-admin.site.register(RepairDetail)
-admin.site.register(Client)
-admin.site.register(ServiceCompany)
+app_models = apps.get_app_config("app").get_models()
+
+for model in app_models:
+    try:
+        admin.site.register(model)
+    except admin.sites.AlreadyRegistered:
+        pass
