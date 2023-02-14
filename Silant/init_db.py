@@ -9,12 +9,13 @@ import string
 from app.models import *
 from users.models import *
 from manuals.models import *
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from openpyxl import load_workbook
+from django.db import IntegrityError
+from django.contrib.contenttypes.models import ContentType
 
 
 wb = load_workbook(filename="data.xlsx")
-print(wb.sheetnames)
 car = wb["машины"]
 mtn = wb["ТО output"]
 rec = wb["рекламация output"]
@@ -22,88 +23,164 @@ car_usr = range(4, 14)
 rep_range = range(3, 15)
 mtn_range = range(2, 38)
 
+client_permissions = [
+    # car
+    "view_car",
+    # repairs
+    "view_repair",
+    # maitenance
+    "view_maitenance",
+    "add_maitenance",
+    "change_maitenance",
+]
+
+service_permissions = [
+    # car
+    "view_car",
+    # repairs
+    "view_repair",
+    "add_repair",
+    "change_repair",
+    # maitenance
+    "view_maitenance",
+    "add_maitenance",
+    "change_maitenance",
+]
+
+manager_models = [
+    ContentType.objects.get_for_model(Car),
+    ContentType.objects.get_for_model(Repair),
+    ContentType.objects.get_for_model(Maitenance),
+    ContentType.objects.get_for_model(CarModel),
+    ContentType.objects.get_for_model(EngineModel),
+    ContentType.objects.get_for_model(TransmissionModel),
+    ContentType.objects.get_for_model(DrivingAxleModel),
+    ContentType.objects.get_for_model(SteeringAxleModel),
+    ContentType.objects.get_for_model(MaitenanceType),
+    ContentType.objects.get_for_model(MaitenanceProvider),
+    ContentType.objects.get_for_model(RepairMethod),
+    ContentType.objects.get_for_model(RepairUnit),
+]
+
+client_group = Group.objects.create(name="client")
+manager_group = Group.objects.create(name="manager")
+service_group = Group.objects.create(name="service company")
+print("Groups created")
+
+
+def init_group_permissions():
+    for perm in client_permissions:
+        perms = Permission.objects.filter(codename=perm)
+        for perm in perms.iterator():
+            client_group.permissions.add(perm)
+    for perm in service_permissions:
+        perms = Permission.objects.filter(codename=perm)
+        for perm in perms.iterator():
+            service_group.permissions.add(perm)
+
+    for model in manager_models:
+        post = Permission.objects.filter(content_type=model)
+        for permission in post:
+            manager_group.permissions.add(permission)
+    print("Permissions assigned")
+
 
 def init_superuser():
     try:
         User.objects.create_superuser(username="admin", password="admin")
         print("Superuser created")
-    except Exception as e:
-        print(e)
+    except IntegrityError:
+        pass
 
 
 def random_string():
-    characters = string.ascii_letters + string.digits + string.punctuation
-    result = "".join(random.choice(characters) for i in range(12))
+    characters = string.ascii_letters + string.digits
+    result = "".join(random.choice(characters) for i in range(1, 16))
     return result
 
 
-def init_manuals_and_users():
+def init_car_parts_manuals():
     # car parts
     for i in car_usr:
         try:
             CarModel.objects.create(name=car[f"B{i}"].value)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
         try:
             EngineModel.objects.create(name=car[f"D{i}"].value)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
         try:
             TransmissionModel.objects.create(name=car[f"F{i}"].value)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
         try:
             DrivingAxleModel.objects.create(name=car[f"H{i}"].value)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
         try:
             SteeringAxleModel.objects.create(name=car[f"J{i}"].value)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
+    print("Car parts manuals created")
+
+
+def init_users():
+    for i in car_usr:
         try:
-            Client.objects.create(
+            user = Client.objects.create(
                 username=random_string().lower(),
-                password=random_string(),
                 name=car[f"M{i}"].value,
             )
-        except Exception as e:
-            print(e)
+            user.save()
+            user.groups.add(client_group)
+            user.set_password(random_string())
+            user.save()
+        except IntegrityError:
+            pass
         try:
-            ServiceCompany.objects.create(
+            user = ServiceCompany.objects.create(
                 username=random_string().lower(),
-                password=random_string(),
                 name=car[f"Q{i}"].value,
             )
-        except Exception as e:
-            print(e)
+            user.save()
+            user.groups.add(service_group)
+            user.set_password(random_string())
+            user.save()
+        except IntegrityError:
+            pass
+    print("Users created")
 
+
+def init_repair_manuals():
     for i in rep_range:
         try:
             RepairUnit.objects.create(name=rec[f"D{i}"].value)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
         try:
             RepairMethod.objects.create(name=rec[f"F{i}"].value)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
 
-    # maitenance
+
+def init_maitenance_manuals():
     for i in mtn_range:
         try:
             MaitenanceType.objects.create(name=mtn[f"B{i}"].value)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
         try:
             MaitenanceProvider.objects.create(name=mtn[f"G{i}"].value)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
+    print("Manuals and users created")
 
 
 def init_cars():
     try:
         for i in car_usr:
             Car.objects.create(
-                contract_number=car[f"A{i}"].value,
                 model=CarModel.objects.get(name=car[f"B{i}"].value),
                 serial_number=car[f"C{i}"].value,
                 engine_model=EngineModel.objects.get(name=car[f"D{i}"].value),
@@ -127,8 +204,9 @@ def init_cars():
                 additional_equipment=car[f"P{i}"].value,
                 service_company=ServiceCompany.objects.get(name=car[f"Q{i}"].value),
             )
-    except Exception as e:
-        print(e)
+    except IntegrityError:
+        pass
+    print("Cars created")
 
 
 def init_maitenance():
@@ -152,8 +230,9 @@ def init_maitenance():
                 car=car,
                 service_company=car.service_company,
             )
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
+    print("Maitenance created")
 
 
 def init_repairs():
@@ -172,26 +251,56 @@ def init_repairs():
                 car=car,
                 service_company=car.service_company,
             )
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            pass
+    print("Repairs created")
 
 
-import logging
-
-logger = logging.getLogger()
-
-# manager
-def init_manager():
+def init_test_manager():
     try:
-        Manager.objects.create(username="manager", password="password", name="Менеджер")
+        user = Manager.objects.create(username="manager", name="Тест Менеджер")
+        user.save()
+        user.groups.add(manager_group)
+        user.set_password("password")
+        user.save()
         print("Manager created")
-    except Exception as e:
-        logger.exception(repr(e))
+    except IntegrityError:
+        pass
+
+
+def init_test_client():
+    try:
+        user = Client.objects.create(username="test_client", name="Тест Клиент")
+        user.save()
+        user.set_password("password")
+        user.groups.add(client_group)
+        user.save()
+    except IntegrityError:
+        pass
+
+
+def init_test_service():
+    try:
+        user = ServiceCompany.objects.create(
+            username="test_service", name="Тест Компания"
+        )
+        user.save()
+        user.set_password("password")
+        user.groups.add(client_group)
+        user.save()
+    except IntegrityError:
+        pass
 
 
 init_superuser()
-init_manuals_and_users()
-init_manager()
+init_group_permissions()
+init_test_manager()
+init_test_client()
+init_test_service()
+init_car_parts_manuals()
+init_users()
+init_maitenance_manuals()
+init_repair_manuals()
 init_cars()
 init_repairs()
 init_maitenance()

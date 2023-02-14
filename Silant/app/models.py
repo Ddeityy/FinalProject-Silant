@@ -9,7 +9,6 @@ class Car(models.Model):
         verbose_name = "Машина"
         verbose_name_plural = "Машины"
 
-    contract_number = models.TextField(verbose_name="№ п/п")
     model = models.ForeignKey(
         CarModel, on_delete=models.CASCADE, verbose_name="Модель техники"
     )

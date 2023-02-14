@@ -44,12 +44,17 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "allauth",
     "allauth.account",
+    "allauth.socialaccount",
     "app",
     "api",
     "rest_framework",
     "users",
     "manuals",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAdminUser"),
+}
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
