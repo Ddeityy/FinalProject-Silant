@@ -17,9 +17,7 @@ class DynamicCarSerializer(serializers.ModelSerializer):
         # Don't pass the 'fields' arg up to the superclass
         request = kwargs.get("context", {}).get("request")
         super().__init__(*args, **kwargs)
-        if request.user.is_authenticated:
-            pass
-        else:
+        if request.user.is_anonymous:
             for field in unauthorized_fields:
                 self.fields.pop(field)
 
