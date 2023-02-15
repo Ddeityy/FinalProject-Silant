@@ -53,7 +53,12 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAdminUser"),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.DjangoModelPermissions",
+    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+    ),
 }
 
 AUTHENTICATION_BACKENDS = [
@@ -64,7 +69,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/api/car/1"
+LOGOUT_REDIRECT_URL = "/accounts/login/"
 ACCOUNT_ADAPTER = "app.adapter.NoNewUsersAccountAdapter"
 
 MIDDLEWARE = [

@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from app.models import *
-from rest_framework.exceptions import PermissionDenied
 
-unauthorized_fields = [
+authorized_fields = [
     "shipment_date",
     "buyer",
     "consignee",
@@ -12,21 +11,18 @@ unauthorized_fields = [
 ]
 
 
-class DynamicCarSerializer(serializers.ModelSerializer):
+class LimitedCarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Car
+        fields = "__all__"
+
     def __init__(self, *args, **kwargs):
-        # Don't pass the 'fields' arg up to the superclass
-        request = kwargs.get("context", {}).get("request")
         super().__init__(*args, **kwargs)
-        if request.user.is_anonymous:
-            for field in unauthorized_fields:
-                self.fields.pop(field)
+        for field in authorized_fields:
+            self.fields.pop(field)
 
 
-class CarSerializer(DynamicCarSerializer):
-    def create(self, *args, **kwargs):
-        request = kwargs.get("context", {}).get("request")
-        request.user.groups.filter(name="client").exists()
-
+class CarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = "__all__"
