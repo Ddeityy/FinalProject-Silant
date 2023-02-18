@@ -7,8 +7,6 @@ setup()
 import random
 import string
 from app.models import *
-from users.models import *
-from manuals.models import *
 from django.contrib.auth.models import User, Group, Permission
 from openpyxl import load_workbook
 from django.db import IntegrityError
@@ -62,26 +60,33 @@ manager_models = [
     ContentType.objects.get_for_model(RepairUnit),
 ]
 
-client_group = Group.objects.create(name="client")
-manager_group = Group.objects.create(name="manager")
-service_group = Group.objects.create(name="service company")
-print("Groups created")
+
+def init_groups():
+    client_group = Group.objects.create(name="client")
+    manager_group = Group.objects.create(name="manager")
+    service_group = Group.objects.create(name="service company")
+    print("Groups created")
+    return client_group, manager_group, service_group
+
+
+c, m, s = init_groups()
 
 
 def init_group_permissions():
     for perm in client_permissions:
         perms = Permission.objects.filter(codename=perm)
         for perm in perms.iterator():
-            client_group.permissions.add(perm)
+            c.permissions.add(perm)
+
     for perm in service_permissions:
         perms = Permission.objects.filter(codename=perm)
         for perm in perms.iterator():
-            service_group.permissions.add(perm)
+            s.permissions.add(perm)
 
     for model in manager_models:
         post = Permission.objects.filter(content_type=model)
         for permission in post:
-            manager_group.permissions.add(permission)
+            m.permissions.add(permission)
     print("Permissions assigned")
 
 
@@ -133,8 +138,9 @@ def init_users():
                 name=car[f"M{i}"].value,
             )
             user.save()
-            user.groups.add(client_group)
-            user.set_password(random_string())
+            user.groups.add(c)
+            user.set_password("password")
+            # user.set_password(random_string())
             user.save()
         except IntegrityError:
             pass
@@ -144,8 +150,9 @@ def init_users():
                 name=car[f"Q{i}"].value,
             )
             user.save()
-            user.groups.add(service_group)
-            user.set_password(random_string())
+            user.groups.add(s)
+            user.set_password("password")
+            # user.set_password(random_string())
             user.save()
         except IntegrityError:
             pass
@@ -260,7 +267,7 @@ def init_test_manager():
     try:
         user = Manager.objects.create(username="manager", name="Тест Менеджер")
         user.save()
-        user.groups.add(manager_group)
+        user.groups.add(m)
         user.set_password("password")
         user.save()
         print("Manager created")
@@ -273,7 +280,7 @@ def init_test_client():
         user = Client.objects.create(username="test_client", name="Тест Клиент")
         user.save()
         user.set_password("password")
-        user.groups.add(client_group)
+        user.groups.add(c)
         user.save()
     except IntegrityError:
         pass
@@ -286,7 +293,7 @@ def init_test_service():
         )
         user.save()
         user.set_password("password")
-        user.groups.add(client_group)
+        user.groups.add(c)
         user.save()
     except IntegrityError:
         pass
