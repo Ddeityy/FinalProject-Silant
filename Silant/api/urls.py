@@ -25,6 +25,7 @@ router.register(r"maitenance", MaitenanceViewSet)
 router.register(r"repair", RepairViewSet)
 
 urlpatterns = [
+    path("auth/", include("dj_rest_auth.urls")),
     path("", include(router.urls)),
     re_path(
         r"^swagger(?P<format>\.json|\.yaml)$",

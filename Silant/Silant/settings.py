@@ -47,7 +47,11 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "app",
     "api",
+    "frontend",
     "rest_framework",
+    "rest_framework.authtoken",
+    "dj_rest_auth",
+    "corsheaders",
     "drf_yasg",
 ]
 
@@ -56,8 +60,9 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.DjangoModelPermissions",
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ),
+    "DATETIME_FORMAT": "%m/%d/%Y %I:%M%P",
 }
 
 AUTHENTICATION_BACKENDS = [
@@ -68,11 +73,18 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
-LOGIN_REDIRECT_URL = "/api/car/1"
-LOGOUT_REDIRECT_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_ADAPTER = "app.adapter.NoNewUsersAccountAdapter"
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:8002",
+]
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -151,9 +163,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "app/static"
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "app/media"
+STATICFILES_DIRS = [BASE_DIR / "frontend/static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
