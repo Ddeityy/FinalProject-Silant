@@ -8,7 +8,7 @@ const Login = () => {
 
   useEffect(() => {
     if (localStorage.getItem('token') !== null) {
-      window.location.replace('http://localhost:3000/dashboard');
+      window.location.replace('http://localhost:8002/');
     } else {
       setLoading(false);
     }
@@ -34,7 +34,7 @@ const Login = () => {
         if (data.key) {
           localStorage.clear();
           localStorage.setItem('token', data.key);
-          window.location.replace('http://localhost:3000/');
+          window.location.replace('http://localhost:8002/');
         } else {
           setUsername('');
           setPassword('');
@@ -45,7 +45,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className='app-header'>
       {loading === false && <h1>Войти</h1>}
       {errors === true && <h2>Неправильные учётные данные.</h2>}
       {loading === false && (

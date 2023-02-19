@@ -5,7 +5,7 @@ const Logout = () => {
 
   useEffect(() => {
     if (localStorage.getItem('token') == null) {
-      window.location.replace('http://localhost:3000/login');
+      window.location.replace('http://localhost:8002');
     } else {
       setLoading(false);
     }
@@ -25,17 +25,17 @@ const Logout = () => {
       .then(data => {
         console.log(data);
         localStorage.clear();
-        window.location.replace('http://localhost:3000/login');
+        window.location.replace('http://localhost:8002/');
       });
   };
 
   return (
-    <div>
+    <div className='app-header'>
       {loading === false && (
-        <Fragment>
+        <>
           <h1>Вы уверены, что хотите выйти?</h1>
           <input type='button' value='Выйти' onClick={handleLogout} />
-        </Fragment>
+        </>
       )}
     </div>
   );

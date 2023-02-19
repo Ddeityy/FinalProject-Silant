@@ -3,10 +3,11 @@ import React, { useState, useEffect, Fragment } from 'react';
 const Dashboard = () => {
   const [userUsername, setUserUsername] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('token') === null) {
-      window.location.replace('http://localhost:3000/login');
+      setIsAuth(false)
     } else {
       fetch('http://127.0.0.1:8002/api/auth/user/', {
         method: 'GET',
@@ -20,6 +21,7 @@ const Dashboard = () => {
           console.log(data)
           setUserUsername(data.userUsername);
           setLoading(false);
+          setIsAuth(true)
         });
     }
   }, []);

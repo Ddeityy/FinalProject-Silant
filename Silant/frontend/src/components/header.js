@@ -18,14 +18,14 @@ const AppHeader = () => {
           <Fragment>
             {' '}
             <li>
-              <Link to='/logout'>Logout</Link>
+              <Link to='/logout'>Выйти</Link>
             </li>
           </Fragment>
         ) : (
           <Fragment>
             {' '}
             <li>
-              <Link to='/login'>Login</Link>
+              <Link to='/login'>Войти</Link>
             </li>
           </Fragment>
         )}
