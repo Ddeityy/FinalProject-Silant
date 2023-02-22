@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import AppLogo from './logo.jsx';
 
 const AppHeader = () => {
   const [isAuth, setIsAuth] = useState(false);
@@ -11,25 +12,35 @@ const AppHeader = () => {
   }, []);
 
   return (
-    <div className='app-header'>
-      <h1>Django React Auth</h1>
-      <ul>
+    <div className='app-container'>
+      <div className='header-container'>
+        <div className='app-logo'>
+          <AppLogo/>
+        </div>
+        <div className='app-field'>
+          +7 (800) 555-35-35 telegram
+        </div>
         {isAuth === true ? (
           <Fragment>
             {' '}
-            <li>
+            <div className='app-field'>
               <Link to='/logout'>Выйти</Link>
-            </li>
+            </div>
           </Fragment>
         ) : (
           <Fragment>
             {' '}
-            <li>
+            <div className='app-field'>
               <Link to='/login'>Войти</Link>
-            </li>
+            </div>
           </Fragment>
         )}
-      </ul>
+      </div>
+      <div className='header-container'>
+        <div className='app-field'>
+          Электронная сервисная книжка "Мой Силант"
+        </div>
+      </div>
     </div>
   );
 };

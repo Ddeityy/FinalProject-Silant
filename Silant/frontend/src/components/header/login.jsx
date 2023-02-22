@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -8,7 +9,7 @@ const Login = () => {
 
   useEffect(() => {
     if (localStorage.getItem('token') !== null) {
-      window.location.replace('http://localhost:8002/');
+      window.location.replace('http://127.0.0.1:8002/')
     } else {
       setLoading(false);
     }
@@ -34,7 +35,7 @@ const Login = () => {
         if (data.key) {
           localStorage.clear();
           localStorage.setItem('token', data.key);
-          window.location.replace('http://localhost:8002/');
+          window.location.replace('http://127.0.0.1:8002/');
         } else {
           setUsername('');
           setPassword('');
@@ -45,12 +46,11 @@ const Login = () => {
   };
 
   return (
-    <div className='app-header'>
-      {loading === false && <h1>Войти</h1>}
+    <div className='app-container'>
       {errors === true && <h2>Неправильные учётные данные.</h2>}
       {loading === false && (
-        <form onSubmit={onSubmit}>
-          <label htmlFor='username'>Логин:</label> <br />
+        <form onSubmit={onSubmit} className="app-form">
+          <label htmlFor='username'>Логин</label> <br />
           <input
             name='username'
             type='username'
@@ -59,7 +59,7 @@ const Login = () => {
             onChange={e => setUsername(e.target.value)}
           />{' '}
           <br />
-          <label htmlFor='password'>Пароль:</label> <br />
+          <label htmlFor='password'>Пароль</label> <br />
           <input
             name='password'
             type='password'

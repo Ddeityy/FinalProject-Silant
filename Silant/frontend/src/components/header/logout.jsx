@@ -1,19 +1,20 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect} from 'react';
+
 
 const Logout = () => {
-  const [loading, setLoading] = useState(true);
+  const [isAuth, setIsAuth] = useState(Boolean);
 
   useEffect(() => {
     if (localStorage.getItem('token') == null) {
-      window.location.replace('http://localhost:8002');
+      setIsAuth(true)
+      window.location.replace('http://127.0.0.1:8002/')
     } else {
-      setLoading(false);
+      setIsAuth(false);
     }
   }, []);
 
   const handleLogout = e => {
     e.preventDefault();
-
     fetch('http://127.0.0.1:8002/api/auth/logout/', {
       method: 'POST',
       headers: {
@@ -25,17 +26,18 @@ const Logout = () => {
       .then(data => {
         console.log(data);
         localStorage.clear();
-        window.location.replace('http://localhost:8002/');
+        window.location.replace('http://127.0.0.1:8002/')
       });
   };
 
   return (
-    <div className='app-header'>
-      {loading === false && (
-        <>
-          <h1>Вы уверены, что хотите выйти?</h1>
-          <input type='button' value='Выйти' onClick={handleLogout} />
-        </>
+    <div className='app-container'>
+      {isAuth && (
+        <form className='app-form'>
+          <label>Вы уверены, что хотите выйти?</label>
+          <br />
+          <input type='submit' value='Выйти' onClick={handleLogout} />
+        </form>
       )}
     </div>
   );

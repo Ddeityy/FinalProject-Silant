@@ -4,15 +4,168 @@
 #EBE6D6
 */
 
-app-body {
-    background-color: #163E6C;
+@font-face {
+    font-family: 'pt-astra';
+    src: url('../../static/fonts/PT-Astra-Sans_Regular.ttf') format('embedded-opentype'), /* Internet Explorer */
+         url('../../static/fonts/PT-Astra-Sans_Regular.ttf') format('woff2'),             /* Super Modern Browsers */
+         url('../../static/fonts/PT-Astra-Sans_Regular.ttf') format('woff'),              /* Pretty Modern Browsers */
+         url('../../static/fonts/PT-Astra-Sans_Regular.ttf') format('truetype'),          /* Safari, Android, iOS */
+         url('../../static/fonts/PT-Astra-Sans_Regular.ttf') format('svg');               /* Legacy iOS */
 }
 
-.app-header {
-    background-color: #163E6C;
+html * {
+    font-family: 'pt-astra';
+    background-color: #EBE6D6;
+    justify-content: center;
+};
+
+@media only screen and (max-width: 360px) {
+    .app-field {
+      font-size: 1.5vw;
+    }
+  }
+
+
+@media only screen and (min-width: 768px) {
+  .app-field {
+    font-size: 1.75vw;
+  }
+  .app-container {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
-.app-footer {
-    background-color: #163E6C;
+@media only screen and (min-width: 864px) {
+  .app-field {
+    font-size: 2vw;
+  }
+  .app-container {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
+@media only screen and (min-width: 900px) {
+  .app-field {
+    font-size: 2vw;
+  }
+  .app-container {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media only screen and (min-width: 1080px) {
+  .app-field {
+    font-size: 1.6vw;
+    margin-left: 10vw;
+    margin-right: 10vw;
+  }
+  .app-container {
+    width: 60%;
+    margin-left: 25%;
+    margin-right: 25%;
+  }
+}
+
+a {
+  all: unset;
+}
+
+.App {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.app-logo {
+    background-color: #163e6c;
+    width:10vw;
+    height: auto;
+}
+.app-logo img {
+  width: 100%;
+  background-color: #163e6c;
+}
+
+.app-field {
+  background-color: #ebe6d6;
+  border-radius: 25px;
+  padding: 5px;
+  margin: 10px 15px 10px 0;
+  width: fit-content;
+}
+
+.app-container {
+  display: flexbox;
+  align-items: center;
+  justify-content: center;
+  background-color: #163e6c;
+  border-radius: 10px;
+  text-align: center;
+  margin: 1vw;
+  padding: 2vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  background-color: #163e6c;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #163e6c;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.app-form {
+    background-color: #163e6c;
+    margin: 2px;
+    font-size: 1.5vw;
+    display: flex;
+    flex-wrap: nowrap;
+    box-sizing: border-box
+}
+
+.app-form input[type='submit'] {
+    margin: 9px;
+    height: 2vw;
+}
+
+.app-form input {
+  border-radius: 10px;
+  border-style: hidden;
+  background-color: #ebe6d6;
+  margin: 7px;
+  outline: none;
+  height: 1.5vw;
+  width: auto;
+  font-size: 1.5vw;
+  text-align: center;
+}
+
+.app-form label {
+  border-radius: 15px;
+  border-style: hidden;
+  background-color: #ebe6d6;
+  margin: 7px;
+  padding: 2px;
+  outline: none;
+}
