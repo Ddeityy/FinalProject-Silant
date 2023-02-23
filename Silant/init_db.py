@@ -24,6 +24,8 @@ mtn_range = range(2, 38)
 client_permissions = [
     # car
     "view_car",
+    "view_client",
+    "view_servicecompany"
     # repairs
     "view_repair",
     # maitenance
@@ -35,6 +37,8 @@ client_permissions = [
 service_permissions = [
     # car
     "view_car",
+    "view_client",
+    "view_servicecompany"
     # repairs
     "view_repair",
     "add_repair",
@@ -46,6 +50,8 @@ service_permissions = [
 ]
 
 manager_models = [
+    ContentType.objects.get_for_model(Client),
+    ContentType.objects.get_for_model(ServiceCompany),
     ContentType.objects.get_for_model(Car),
     ContentType.objects.get_for_model(Repair),
     ContentType.objects.get_for_model(Maitenance),
@@ -104,7 +110,7 @@ def random_string():
     return result
 
 
-def init_car_parts_manuals():
+def init_car_manuals():
     # car parts
     for i in car_usr:
         try:
@@ -127,33 +133,33 @@ def init_car_parts_manuals():
             SteeringAxleModel.objects.create(name=car[f"J{i}"].value)
         except IntegrityError:
             pass
-    print("Car parts manuals created")
+    print("Car manuals created")
 
 
 def init_users():
     for i in car_usr:
         try:
-            user = Client.objects.create(
-                username=random_string().lower(),
-                name=car[f"M{i}"].value,
+            user = User.objects.create(
+                username="c_" + random_string().lower(),
             )
             user.save()
             user.groups.add(c)
             user.set_password("password")
             # user.set_password(random_string())
             user.save()
+            Client.objects.create(name=car[f"M{i}"].value, user=user)
         except IntegrityError:
             pass
         try:
-            user = ServiceCompany.objects.create(
-                username=random_string().lower(),
-                name=car[f"Q{i}"].value,
+            user = User.objects.create(
+                username="s_" + random_string().lower(),
             )
             user.save()
             user.groups.add(s)
             user.set_password("password")
             # user.set_password(random_string())
             user.save()
+            ServiceCompany.objects.create(name=car[f"Q{i}"].value, user=user)
         except IntegrityError:
             pass
     print("Users created")
@@ -169,6 +175,7 @@ def init_repair_manuals():
             RepairMethod.objects.create(name=rec[f"F{i}"].value)
         except IntegrityError:
             pass
+    print("Repair manuals created")
 
 
 def init_maitenance_manuals():
@@ -181,7 +188,7 @@ def init_maitenance_manuals():
             MaitenanceProvider.objects.create(name=mtn[f"G{i}"].value)
         except IntegrityError:
             pass
-    print("Manuals and users created")
+    print("Maitenance manuals created")
 
 
 def init_cars():
@@ -265,7 +272,7 @@ def init_repairs():
 
 def init_test_manager():
     try:
-        user = Manager.objects.create(username="manager", name="Тест Менеджер")
+        user = User.objects.create(username="manager")
         user.save()
         user.groups.add(m)
         user.set_password("password")
@@ -277,24 +284,24 @@ def init_test_manager():
 
 def init_test_client():
     try:
-        user = Client.objects.create(username="test_client", name="Тест Клиент")
+        user = User.objects.create(username="test_client")
         user.save()
         user.set_password("password")
         user.groups.add(c)
         user.save()
+        Client.objects.create(name="Тест Клиент", user=user)
     except IntegrityError:
         pass
 
 
 def init_test_service():
     try:
-        user = ServiceCompany.objects.create(
-            username="test_service", name="Тест Компания"
-        )
+        user = User.objects.create(username="test_service")
         user.save()
         user.set_password("password")
-        user.groups.add(c)
+        user.groups.add(s)
         user.save()
+        ServiceCompany.objects.create(name="Тест Компания", user=user)
     except IntegrityError:
         pass
 
@@ -304,8 +311,8 @@ init_group_permissions()
 init_test_manager()
 init_test_client()
 init_test_service()
-init_car_parts_manuals()
 init_users()
+init_car_manuals()
 init_maitenance_manuals()
 init_repair_manuals()
 init_cars()

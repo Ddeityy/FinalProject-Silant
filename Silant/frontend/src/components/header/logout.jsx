@@ -39,6 +39,11 @@ const Logout = () => {
           <input type='submit' value='Выйти' onClick={handleLogout} />
         </form>
       )}
+      <form className='app-form'>
+          <label>Вы уверены, что хотите выйти?</label>
+          <br />
+          <input type='submit' value='Выйти' onClick={handleLogout} />
+        </form>
     </div>
   );
 };

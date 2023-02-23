@@ -5,6 +5,7 @@ import AppFooter from './footer/footer.jsx';
 import AppHeader from './header/header.jsx';
 import Login from './header/login.jsx';
 import Logout from './header/logout.jsx';
+import CarTable from './tables/car_table.jsx';
 import "./styles.css"
 
 

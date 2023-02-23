@@ -2,23 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Manager(User):
-    class Meta:
-        verbose_name = "Менеджер"
-        verbose_name_plural = "Менеджеры"
-
-    name = models.TextField(unique=True)
-    description = models.TextField(null=True, blank=True)
-
-    def __str__(self) -> str:
-        return self.name
-
-
-class ServiceCompany(User):
+class ServiceCompany(models.Model):
     class Meta:
         verbose_name = "Сервисная организация"
         verbose_name_plural = "Сервисные организации"
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.TextField(unique=True)
     description = models.TextField(null=True, blank=True)
 
@@ -26,11 +15,12 @@ class ServiceCompany(User):
         return self.name
 
 
-class Client(User):
+class Client(models.Model):
     class Meta:
         verbose_name = "Клиент"
         verbose_name_plural = "Клиенты"
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.TextField(unique=True)
     description = models.TextField(null=True, blank=True)
 

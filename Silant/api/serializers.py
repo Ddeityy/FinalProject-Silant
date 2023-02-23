@@ -93,3 +93,69 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
+
+
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceCompany
+        fields = "__all__"
+
+
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = "__all__"
+
+
+class MaitenanceTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MaitenanceType
+        fields = "__all__"
+
+
+class MaitenanceProviderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MaitenanceProvider
+        fields = "__all__"
+
+
+class RepairMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RepairMethod
+        fields = "__all__"
+
+
+class RepairUnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RepairUnit
+        fields = "__all__"
+
+
+class CarModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarModel
+        fields = "__all__"
+
+
+class EngineModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EngineModel
+        fields = "__all__"
+
+
+class DrivingAxleModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DrivingAxleModel
+        fields = "__all__"
+
+
+class SteeringAxleModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SteeringAxleModel
+        fields = "__all__"
+
+
+class TransmissionModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransmissionModel
+        fields = "__all__"

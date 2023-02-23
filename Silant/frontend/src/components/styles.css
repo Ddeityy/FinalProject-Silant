@@ -113,6 +113,19 @@ a {
   margin-right: auto;
 }
 
+.app-inner-container {
+  display: flexbox;
+  align-items: center;
+  justify-content: center;
+  background-color: #ebe6d6;
+  border-radius: 10px;
+  text-align: center;
+  margin: 1vw;
+  padding: 1vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .header-container {
   display: flex;
   flex-direction: row;
@@ -144,10 +157,6 @@ a {
     box-sizing: border-box
 }
 
-.app-form input[type='submit'] {
-    margin: 9px;
-    height: 2vw;
-}
 
 .app-form input {
   border-radius: 10px;
