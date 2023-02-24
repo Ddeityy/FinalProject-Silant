@@ -3,6 +3,8 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Silant.settings")
 from django import setup
 
+lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+
 setup()
 import random
 import string
@@ -114,23 +116,23 @@ def init_car_manuals():
     # car parts
     for i in car_usr:
         try:
-            CarModel.objects.create(name=car[f"B{i}"].value)
+            CarModel.objects.create(name=car[f"B{i}"].value, description=lorem)
         except IntegrityError:
             pass
         try:
-            EngineModel.objects.create(name=car[f"D{i}"].value)
+            EngineModel.objects.create(name=car[f"D{i}"].value, description=lorem)
         except IntegrityError:
             pass
         try:
-            TransmissionModel.objects.create(name=car[f"F{i}"].value)
+            TransmissionModel.objects.create(name=car[f"F{i}"].value, description=lorem)
         except IntegrityError:
             pass
         try:
-            DrivingAxleModel.objects.create(name=car[f"H{i}"].value)
+            DrivingAxleModel.objects.create(name=car[f"H{i}"].value, description=lorem)
         except IntegrityError:
             pass
         try:
-            SteeringAxleModel.objects.create(name=car[f"J{i}"].value)
+            SteeringAxleModel.objects.create(name=car[f"J{i}"].value, description=lorem)
         except IntegrityError:
             pass
     print("Car manuals created")
@@ -147,7 +149,7 @@ def init_users():
             user.set_password("password")
             # user.set_password(random_string())
             user.save()
-            Client.objects.create(name=car[f"M{i}"].value, user=user)
+            Client.objects.create(name=car[f"M{i}"].value, user=user, description=lorem)
         except IntegrityError:
             pass
         try:
@@ -159,7 +161,9 @@ def init_users():
             user.set_password("password")
             # user.set_password(random_string())
             user.save()
-            ServiceCompany.objects.create(name=car[f"Q{i}"].value, user=user)
+            ServiceCompany.objects.create(
+                name=car[f"Q{i}"].value, user=user, description=lorem
+            )
         except IntegrityError:
             pass
     print("Users created")
@@ -168,11 +172,11 @@ def init_users():
 def init_repair_manuals():
     for i in rep_range:
         try:
-            RepairUnit.objects.create(name=rec[f"D{i}"].value)
+            RepairUnit.objects.create(name=rec[f"D{i}"].value, description=lorem)
         except IntegrityError:
             pass
         try:
-            RepairMethod.objects.create(name=rec[f"F{i}"].value)
+            RepairMethod.objects.create(name=rec[f"F{i}"].value, description=lorem)
         except IntegrityError:
             pass
     print("Repair manuals created")
@@ -181,11 +185,13 @@ def init_repair_manuals():
 def init_maitenance_manuals():
     for i in mtn_range:
         try:
-            MaitenanceType.objects.create(name=mtn[f"B{i}"].value)
+            MaitenanceType.objects.create(name=mtn[f"B{i}"].value, description=lorem)
         except IntegrityError:
             pass
         try:
-            MaitenanceProvider.objects.create(name=mtn[f"G{i}"].value)
+            MaitenanceProvider.objects.create(
+                name=mtn[f"G{i}"].value, description=lorem
+            )
         except IntegrityError:
             pass
     print("Maitenance manuals created")
@@ -289,7 +295,7 @@ def init_test_client():
         user.set_password("password")
         user.groups.add(c)
         user.save()
-        Client.objects.create(name="Тест Клиент", user=user)
+        Client.objects.create(name="Тест Клиент", user=user, description=lorem)
     except IntegrityError:
         pass
 
@@ -301,7 +307,9 @@ def init_test_service():
         user.set_password("password")
         user.groups.add(s)
         user.save()
-        ServiceCompany.objects.create(name="Тест Компания", user=user)
+        ServiceCompany.objects.create(
+            name="Тест Компания", user=user, description=lorem
+        )
     except IntegrityError:
         pass
 

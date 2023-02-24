@@ -4,6 +4,7 @@ from app.models import *
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.http import HttpResponseForbidden
+from django.http import Http404
 
 
 # all methods
@@ -15,23 +16,33 @@ class CarViewSet(viewsets.ModelViewSet):
     serializer_class = CarSerializer
 
     def retrieve(self, request, pk=None):
-        q = Car.objects.get(serial_number=pk)
-        s = None
-        if (
-            self.request.user.id == (q.buyer.id or q.service_company.id)
-        ) or self.request.user.groups.filter(name="manager").exists():
-            s = CarSerializer(q)
-        else:
-            s = LimitedCarSerializer(q)
+        try:
+            q = Car.objects.get(serial_number=pk)
+            s = None
+            if (
+                self.request.user.id == (q.buyer.id or q.service_company.id)
+            ) or self.request.user.groups.filter(name="manager").exists():
+                s = CarSerializer(q)
+            else:
+                s = LimitedCarSerializer(q)
+        except Car.DoesNotExist:
+            raise Http404
         return Response(s.data)
 
     def list(self, request, *args, **kwargs):
-        q = Car.objects.all()
-        s = None
-        if self.request.user.groups.filter(name="manager").exists():
+        try:
+            q = None
             s = CarSerializer(q, many=True)
-        else:
-            s = LimitedCarSerializer(q, many=True)
+            if self.request.user.groups.filter(name="manager").exists():
+                q = Car.objects.filter(buyer=request.user.id)
+            elif self.request.user.groups.filter(name="client").exists():
+                q = Car.objects.filter(buyer=request.user.id)
+            elif self.request.user.groups.filter(name="service company").exists():
+                q = Car.objects.filter(service_company=request.user.id)
+            else:
+                s = LimitedCarSerializer(q, many=True)
+        except Car.DoesNotExist:
+            raise Http404
         return Response(s.data)
 
 
@@ -41,27 +52,33 @@ class MaitenanceViewSet(viewsets.ModelViewSet):
     serializer_class = MaitenanceSerializer
 
     def retrieve(self, request, pk=None):
-        q = Maitenance.objects.get(id=pk)
-        s = None
-        if (
-            self.request.user.id == (q.car.buyer.id or q.service_company.id)
-        ) or self.request.user.groups.filter(name="manager").exists():
-            s = CarSerializer(q)
-        else:
-            Response(status=HttpResponseForbidden)
+        try:
+            q = Maitenance.objects.get(id=pk)
+            s = None
+            if (
+                self.request.user.id == (q.car.buyer.id or q.service_company.id)
+            ) or self.request.user.groups.filter(name="manager").exists():
+                s = CarSerializer(q)
+            else:
+                Response(status=HttpResponseForbidden)
+        except Maitenance.DoesNotExist:
+            raise Http404
         return Response(s.data)
 
     def list(self, request, *args, **kwargs):
-        q = None
-        if self.request.user.groups.filter(name="client").exists():
-            q = Maitenance.objects.filter(car__buyer=request.user.id)
-        elif self.request.user.groups.filter(name="service company").exists():
-            q = Maitenance.objects.filter(service_company=request.user.id)
-        elif self.request.user.groups.filter(name="manager").exists():
-            q = Maitenance.objects.all()
-        else:
-            return Response(status=HttpResponseForbidden)
-        s = MaitenanceSerializer(q, many=True)
+        try:
+            q = None
+            if self.request.user.groups.filter(name="client").exists():
+                q = Maitenance.objects.filter(car__buyer=request.user.id)
+            elif self.request.user.groups.filter(name="service company").exists():
+                q = Maitenance.objects.filter(service_company=request.user.id)
+            elif self.request.user.groups.filter(name="manager").exists():
+                q = Maitenance.objects.all()
+            else:
+                return Response(status=HttpResponseForbidden)
+            s = MaitenanceSerializer(q, many=True)
+        except Maitenance.DoesNotExist:
+            raise Http404
         return Response(s.data)
 
 
@@ -71,23 +88,29 @@ class RepairViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.DjangoModelPermissions]
 
     def retrieve(self, request, pk=None):
-        q = Repair.objects.get(id=pk)
-        s = None
-        if (
-            self.request.user.id == (q.car.buyer.id or q.service_company.id)
-        ) or self.request.user.groups.filter(name="manager").exists():
-            s = CarSerializer(q)
-        else:
-            Response(status=HttpResponseForbidden)
+        try:
+            q = Repair.objects.get(id=pk)
+            s = None
+            if (
+                self.request.user.id == (q.car.buyer.id or q.service_company.id)
+            ) or self.request.user.groups.filter(name="manager").exists():
+                s = CarSerializer(q)
+            else:
+                Response(status=HttpResponseForbidden)
+        except Repair.DoesNotExist:
+            raise Http404
         return Response(s.data)
 
     def list(self, request, *args, **kwargs):
-        q = Repair.objects.all()
-        if self.request.user.groups.filter(name="client").exists():
-            q = Repair.objects.filter(car__buyer=request.user.id)
-        elif self.request.user.groups.filter(name="service company").exists():
-            q = Repair.objects.filter(service_company=request.user.id)
-        s = RepairSerializer(q, many=True)
+        try:
+            q = Repair.objects.all()
+            if self.request.user.groups.filter(name="client").exists():
+                q = Repair.objects.filter(car__buyer=request.user.id)
+            elif self.request.user.groups.filter(name="service company").exists():
+                q = Repair.objects.filter(service_company=request.user.id)
+            s = RepairSerializer(q, many=True)
+        except Repair.DoesNotExist:
+            raise Http404
         return Response(s.data)
 
 
@@ -98,18 +121,21 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def current(self, request):
-        q = None
-        s = None
-        if self.request.user.groups.filter(name="client").exists():
-            print(self.request.user.groups.all())
-            q = Client.objects.get(user__id=request.user.id)
-            s = ClientSerializer(q, many=False)
-        elif self.request.user.groups.filter(name="service company").exists():
-            q = ServiceCompany.objects.get(user__id=request.user.id)
-            s = ServiceSerializer(q, many=False)
-        else:
-            q = User.objects.get(id=request.user.id)
-            s = UserSerializer(q, many=False)
+        try:
+            q = None
+            s = None
+            if self.request.user.groups.filter(name="client").exists():
+                print(self.request.user.groups.all())
+                q = Client.objects.get(user__id=request.user.id)
+                s = ClientSerializer(q, many=False)
+            elif self.request.user.groups.filter(name="service company").exists():
+                q = ServiceCompany.objects.get(user__id=request.user.id)
+                s = ServiceSerializer(q, many=False)
+            else:
+                q = User.objects.get(id=request.user.id)
+                s = UserSerializer(q, many=False)
+        except User.DoesNotExist:
+            raise Http404
         return Response(s.data)
 
 
@@ -118,47 +144,11 @@ class ClientViewSet(viewsets.ModelViewSet):
     serializer_class = ClientSerializer
     permission_classes = [permissions.DjangoModelPermissions]
 
-    @action(detail=False)
-    def cars(self, request):
-        q = Car.objects.filter(buyer=request.user.id)
-        s = CarSerializer(q, many=True)
-        return Response(s.data)
-
-    @action(detail=False)
-    def maitenance(self, request):
-        q = Maitenance.objects.filter(car__buyer=request.user.id)
-        s = MaitenanceSerializer(q, many=True)
-        return Response(s.data)
-
-    @action(detail=False)
-    def repair(self, request):
-        q = Repair.objects.filter(car__buyer=request.user.id)
-        s = RepairSerializer(q, many=True)
-        return Response(s.data)
-
 
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = ServiceCompany.objects.all()
     serializer_class = ServiceSerializer
     permission_classes = [permissions.DjangoModelPermissions]
-
-    @action(detail=False)
-    def cars(self, request):
-        q = Car.objects.filter(service_company=request.user.id)
-        s = CarSerializer(q, many=True)
-        return Response(s.data)
-
-    @action(detail=False)
-    def maitenance(self, request):
-        q = Maitenance.objects.filter(service_company=request.user.id)
-        s = MaitenanceSerializer(q, many=True)
-        return Response(s.data)
-
-    @action(detail=False)
-    def repair(self, request):
-        q = Repair.objects.filter(service_company=request.user.id)
-        s = RepairSerializer(q, many=True)
-        return Response(s.data)
 
 
 class CarModelViewSet(viewsets.ModelViewSet):

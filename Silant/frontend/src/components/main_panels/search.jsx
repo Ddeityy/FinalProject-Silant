@@ -1,35 +1,39 @@
-import React, { useEffect, useState } from "react"
-import CarTable from "../tables/car_table.jsx"
-//import useState from "react-usestateref"
+import React, { useEffect, useState } from "react";
+import CarTable from "../tables/car_table.jsx";
+import { Link } from "react-router-dom";
 
 const SearchBar = () => {
+  const [query, setQuery] = useState([]);
 
-    const [query, setQuery] = useState("")
-    const [loading, setLoading] = useState(true)
+  const onChange = (e) => {
+    setQuery(e.target.value);
+  };
 
-    const onChange = (e) => {
-        setQuery(e.target.value)
-    };
-
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(false)
-    };
-    return (loading ?
-        <>
-            <form className='app-form' onSubmit={onSubmit}>
-                <input type="text" placeholder="0001" value={query} required onChange={onChange} />
-                <input type="button" value="Поиск" />
+  return (
+    query && (
+      <>
+        <div>
+          <h3>
+            Проверьте комплектацию и технические характеристики техники Силант
+          </h3>
+          <label>Введите заводской номер</label>
+          <div className="app-inner-container">
+            <form className="app-form">
+              <input
+                type="text"
+                placeholder="0001"
+                value={query}
+                required
+                onChange={onChange}
+              />
+              <Link to={`car/${query}`}>
+                <button type="submit">Поиск</button>
+              </Link>
             </form>
-        </>
-        :
-        <>
-            <form className='app-form' onSubmit={onSubmit}>
-                <input type="text" placeholder="0001" value={query} required onChange={onChange} />
-                <input type="button" value="Поиск" />
-            </form>
-            <CarTable serial={query} />
-        </>
+          </div>
+        </div>
+      </>
     )
-}
+  );
+};
 export default SearchBar;

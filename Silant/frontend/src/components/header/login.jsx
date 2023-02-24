@@ -1,44 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import Button from '@mui/material/Button';
+import React, { useState, useEffect } from "react";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (localStorage.getItem('token') !== null) {
-      window.location.replace('http://127.0.0.1:8002/')
+    if (localStorage.getItem("token") !== null) {
+      window.location.replace("http://127.0.0.1:8002/");
     } else {
       setLoading(false);
     }
   }, []);
 
-  const onSubmit = e => {
+  const onSubmit = (e) => {
     e.preventDefault();
 
     const user = {
       username: username,
-      password: password
+      password: password,
     };
 
-    fetch('http://127.0.0.1:8002/api/auth/login/', {
-      method: 'POST',
+    fetch("http://127.0.0.1:8002/api/auth/login/", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(user)
+      body: JSON.stringify(user),
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.key) {
           localStorage.clear();
-          localStorage.setItem('token', data.key);
-          window.location.replace('http://127.0.0.1:8002/');
+          localStorage.setItem("token", data.key);
+          window.location.replace("http://127.0.0.1:8002/");
         } else {
-          setUsername('');
-          setPassword('');
+          setUsername("");
+          setPassword("");
           localStorage.clear();
           setErrors(true);
         }
@@ -46,29 +45,29 @@ const Login = () => {
   };
 
   return (
-    <div className='app-container'>
+    <div className="app-container">
       {errors === true && <h2>Неправильные учётные данные.</h2>}
       {loading === false && (
         <form onSubmit={onSubmit} className="app-form">
-          <label htmlFor='username'>Логин</label> <br />
+          <label htmlFor="username">Логин</label> <br />
           <input
-            name='username'
-            type='username'
+            name="username"
+            type="username"
             value={username}
             required
-            onChange={e => setUsername(e.target.value)}
-          />{' '}
+            onChange={(e) => setUsername(e.target.value)}
+          />{" "}
           <br />
-          <label htmlFor='password'>Пароль</label> <br />
+          <label htmlFor="password">Пароль</label> <br />
           <input
-            name='password'
-            type='password'
+            name="password"
+            type="password"
             value={password}
             required
-            onChange={e => setPassword(e.target.value)}
-          />{' '}
+            onChange={(e) => setPassword(e.target.value)}
+          />{" "}
           <br />
-          <input type='submit' value='Войти' />
+          <input type="submit" value="Войти" />
         </form>
       )}
     </div>

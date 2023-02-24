@@ -31,7 +31,7 @@ html * {
     font-size: 1.75vw;
   }
   .app-container {
-    width: 80%;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
   }
@@ -53,7 +53,7 @@ html * {
     font-size: 2vw;
   }
   .app-container {
-    width: 70%;
+    width: 75%;
     margin-left: auto;
     margin-right: auto;
   }
@@ -66,7 +66,7 @@ html * {
     margin-right: 10vw;
   }
   .app-container {
-    width: 60%;
+    width: 70%;
     margin-left: 25%;
     margin-right: 25%;
   }
@@ -101,7 +101,7 @@ a {
 }
 
 .app-container {
-  display: flexbox;
+  display: inline-flexbox;
   align-items: center;
   justify-content: center;
   background-color: #163e6c;
@@ -114,7 +114,8 @@ a {
 }
 
 .app-inner-container {
-  display: flexbox;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   background-color: #ebe6d6;
@@ -150,23 +151,32 @@ a {
 
 .app-form {
     background-color: #163e6c;
-    margin: 2px;
-    font-size: 1.5vw;
     display: flex;
-    flex-wrap: nowrap;
-    box-sizing: border-box
+    flex-wrap: wrap;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 25px;
+    align-items: center;
 }
 
-
 .app-form input {
-  border-radius: 10px;
+  border-radius: 15px;
   border-style: hidden;
   background-color: #ebe6d6;
   margin: 7px;
+  padding: 3px;
   outline: none;
-  height: 1.5vw;
-  width: auto;
-  font-size: 1.5vw;
+  text-align: center;
+  font-size: medium;
+}
+
+.app-form button {
+  border-radius: 15px;
+  border-style: hidden;
+  background-color: #ebe6d6;
+  margin: 7px;
+  padding: 3px;
+  outline: none;
   text-align: center;
 }
 
@@ -175,6 +185,26 @@ a {
   border-style: hidden;
   background-color: #ebe6d6;
   margin: 7px;
-  padding: 2px;
+  padding: 3px;
   outline: none;
+}
+
+.app-table {
+  overflow-x: auto;
+}
+
+.app-table table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.app-table td, th {
+  border: 1px solid #a7a7a7;
+  text-align: left;
+  padding: 8px;
+}
+
+.app-table tr:nth-child(even) {
+  background-color: #a7a7a7;
 }
