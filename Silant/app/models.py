@@ -28,6 +28,29 @@ class Client(models.Model):
         return self.name
 
 
+class Manual(models.Model):
+    class ManualType(models.TextChoices):
+        CAR_MODEL = "Модель техники"
+        ENINGE_MODEL = "Двигатель"
+        TRANSMISSION_MODEL = "Трансмиссия"
+        DRIVING_AXLE_MODEL = "Ведущий мост"
+        STEERING_AXLE_MODEL = "Управляемый мост"
+        MAITENANCE_TYPE = "Тип ТО"
+        MAITENANCE_PROVIDER = "Компания"
+        REPAIR_METHOD = "Способ ремонта"
+        REPAIR_UNIT = "Узел ремонта"
+
+    class Meta:
+        verbose_name = "Справочник"
+        verbose_name_plural = "Справочники"
+
+    name = models.TextField(unique=True)
+    description = models.TextField(null=True, blank=True)
+    manual_type = models.CharField(
+        max_length=50, choices=ManualType.choices, blank=False, null=False
+    )
+
+
 class CarModel(models.Model):
     class Meta:
         verbose_name = "Модель техники"
@@ -143,25 +166,39 @@ class Car(models.Model):
         verbose_name_plural = "Машины"
 
     model = models.ForeignKey(
-        CarModel, on_delete=models.CASCADE, verbose_name="Модель техники"
+        Manual,
+        on_delete=models.CASCADE,
+        verbose_name="Модель техники",
+        related_name="manual_model",
     )
+
     serial_number = models.TextField(verbose_name="Зав. № машины", unique=True)
     engine_model = models.ForeignKey(
-        EngineModel, on_delete=models.CASCADE, verbose_name="Модель двигателя"
+        Manual,
+        on_delete=models.CASCADE,
+        verbose_name="Модель двигателя",
+        related_name="manual_engine_model",
     )
     engine_serial_number = models.TextField(verbose_name="Зав. № двигателя")
     transmission_model = models.ForeignKey(
-        TransmissionModel, on_delete=models.CASCADE, verbose_name="Модель трансмиссии"
+        Manual,
+        on_delete=models.CASCADE,
+        verbose_name="Модель трансмиссии",
+        related_name="manual_transmission_model",
     )
     transmission_serial_number = models.TextField(verbose_name="Зав. № трансмиссии")
     driving_axle_model = models.ForeignKey(
-        DrivingAxleModel, on_delete=models.CASCADE, verbose_name="Модель ведущего моста"
+        Manual,
+        on_delete=models.CASCADE,
+        verbose_name="Модель ведущего моста",
+        related_name="manual_driving_axle_model",
     )
     driving_axle_serial_number = models.TextField(verbose_name="Зав. № ведущего моста")
     steering_axle_model = models.ForeignKey(
-        SteeringAxleModel,
+        Manual,
         on_delete=models.CASCADE,
         verbose_name="Модель управляемого моста",
+        related_name="manual_steering_axle_model",
     )
     steering_axle_serial_number = models.TextField(
         verbose_name="Зав. № управляемого моста"
@@ -190,7 +227,10 @@ class Maitenance(models.Model):
         verbose_name_plural = "ТО"
 
     type = models.ForeignKey(
-        MaitenanceType, on_delete=models.CASCADE, verbose_name="Вид ТО"
+        Manual,
+        on_delete=models.CASCADE,
+        verbose_name="Вид ТО",
+        related_name="maitenance_type",
     )
     date = models.DateField(verbose_name="Дата проведения ТО")
     operating_time = models.IntegerField(verbose_name="Наработка, м/час")
@@ -202,9 +242,10 @@ class Maitenance(models.Model):
         verbose_name="Самостоятельное проведение ТО", default=False
     )
     provider = models.ForeignKey(
-        MaitenanceProvider,
+        Manual,
         on_delete=models.CASCADE,
         verbose_name="Организация, проводившая ТО",
+        related_name="maitenance_provider",
     )
     car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Зав. № машины")
     service_company = models.ForeignKey(
@@ -222,7 +263,7 @@ class Maitenance(models.Model):
     # Automatically assign the correct service company and provider
     def save(self, *args, **kwargs):
         if self.self_maitenance == True:
-            self_provider = MaitenanceProvider.objects.get(id=4)
+            self_provider = Manual.objects.get(name="самостоятельно")
             self.provider = self_provider
         if self.service_company == None:
             self.service_company = self.car.service_company
@@ -231,18 +272,23 @@ class Maitenance(models.Model):
 
 class Repair(models.Model):
     class Meta:
-        ordering = ["issue_date"]
         verbose_name = "Рекламация"
         verbose_name_plural = "Рекламации"
 
     issue_date = models.DateField(verbose_name="Дата отказа")
     operating_time = models.IntegerField(verbose_name="Наработка, м/час")
     unit = models.ForeignKey(
-        RepairUnit, on_delete=models.DO_NOTHING, verbose_name="Узел отказа"
+        Manual,
+        on_delete=models.DO_NOTHING,
+        verbose_name="Узел отказа",
+        related_name="repair_unit",
     )
     description = models.TextField(verbose_name="Описание отказа")
     method = models.ForeignKey(
-        RepairMethod, on_delete=models.DO_NOTHING, verbose_name="Способ восстановления"
+        Manual,
+        on_delete=models.DO_NOTHING,
+        verbose_name="Способ восстановления",
+        related_name="repair_method",
     )
     repair_parts = models.TextField(
         verbose_name="Используемые запасные части", null=True, blank=True

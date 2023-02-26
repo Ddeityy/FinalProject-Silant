@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-const GeneralManual = () => {
+const Company = () => {
   const [manual, setManual] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -10,7 +10,7 @@ const GeneralManual = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch(`../api/manual/${id}/`, {
+      const response = await fetch(`../api/service-company/${id}/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -18,7 +18,7 @@ const GeneralManual = () => {
       });
 
       if (!response.ok) {
-        const message = `Справочник не найден`;
+        const message = `Компания не найдена`;
         setManual(message);
         setError(true);
         setLoading(false);
@@ -38,9 +38,7 @@ const GeneralManual = () => {
     <div className="app-container">
       <div className="app-inner-container">
         <div className="app-field">
-          <h1>
-            {manual.manual_type} {manual.name}
-          </h1>
+          <h1>Сервисная компания {manual.name}</h1>
           <br />
           <h2>{manual.description}</h2>
         </div>
@@ -49,4 +47,4 @@ const GeneralManual = () => {
   );
 };
 
-export default GeneralManual;
+export default Company;

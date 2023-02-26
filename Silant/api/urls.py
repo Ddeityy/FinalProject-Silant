@@ -19,21 +19,13 @@ schema_view = get_schema_view(
 )
 
 router = DefaultRouter()
-router.register(r"cars", CarViewSet)
-router.register(r"users", UserViewSet)
+router.register(r"car", CarViewSet)
+router.register(r"user", UserViewSet)
 router.register(r"client", ClientViewSet)
 router.register(r"service-company", ServiceViewSet)
 router.register(r"maitenance", MaitenanceViewSet)
 router.register(r"repair", RepairViewSet)
-router.register(r"car-model", CarModelViewSet)
-router.register(r"engine-model", EngineModelViewSet)
-router.register(r"drive-model", DrivingAxleModelViewSet)
-router.register(r"steer-model", SteeringAxleModelViewSet)
-router.register(r"trans-model", TransmissionModelViewSet)
-router.register(r"maitenance-type", MaitenanceTypeViewSet)
-router.register(r"maitenance-provider", MaitenanceProviderViewSet)
-router.register(r"repair-method", RepairMethodViewSet)
-router.register(r"repair-unit", RepairUnitViewSet)
+router.register(r"manual", ManualViewSet)
 
 urlpatterns = [
     path("auth/", include("dj_rest_auth.urls")),

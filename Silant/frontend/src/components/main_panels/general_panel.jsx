@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
 import SearchBar from "./search.jsx";
+import AuthPanel from "./auth_panel.jsx";
 
 const GeneralPanel = () => {
-  const [username, setUsername] = useState("");
-  const [isAuth, setIsAuth] = useState(Boolean);
-  const [userData, setUserData] = useState("");
+  const [userData, setUserData] = useState([]);
+  const [Auth, setAuth] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const data = await fetch(`http://127.0.0.1:8002/api/users/current/`, {
+      const data = await fetch(`http://127.0.0.1:8002/api/user/current/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Token ${localStorage.getItem("token")}`,
         },
       });
-      const jdata = await data.json();
-      setUserData(jdata);
-      setUsername(jdata.name);
-    };
 
+      const jdata = await data.json();
+      console.log(jdata);
+      setUserData(jdata);
+      setAuth(true);
+    };
     if (localStorage.getItem("token") === null) {
-      setIsAuth(false);
+      setAuth(false);
     } else {
       fetch("http://127.0.0.1:8002/api/auth/user/", {
         method: "GET",
@@ -31,9 +32,7 @@ const GeneralPanel = () => {
         },
       })
         .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setIsAuth(true);
+        .then(() => {
           fetchUserData();
         });
     }
@@ -41,12 +40,13 @@ const GeneralPanel = () => {
 
   return (
     <div className="app-container">
-      {isAuth ? (
-        <div className="app-inner-container">
-          <>
-            <h2>{username}</h2>
-          </>
-        </div>
+      {Auth ? (
+        <>
+          <h2 className="app-inner-container">{userData.name}</h2>
+          <div className="app-inner-container">
+            <AuthPanel />
+          </div>
+        </>
       ) : (
         <>
           <div className="app-inner-container">

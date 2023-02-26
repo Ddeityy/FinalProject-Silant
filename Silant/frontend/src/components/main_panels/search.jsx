@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import CarTable from "../tables/car_table.jsx";
 import { Link } from "react-router-dom";
 
 const SearchBar = () => {

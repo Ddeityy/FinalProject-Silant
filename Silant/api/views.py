@@ -7,6 +7,9 @@ from django.http import HttpResponseForbidden
 from django.http import Http404
 
 
+# client 7
+# c_prhht4azvymvcwe
+
 # all methods
 class CarViewSet(viewsets.ModelViewSet):
     permission_classes = [
@@ -14,6 +17,7 @@ class CarViewSet(viewsets.ModelViewSet):
     ]
     queryset = Car.objects.all()
     serializer_class = CarSerializer
+    ordering = ["-shipment_date"]
 
     def retrieve(self, request, pk=None):
         try:
@@ -31,16 +35,22 @@ class CarViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
+            print(Car.objects.all())
+            print(self.request.user.groups.all())
             q = None
-            s = CarSerializer(q, many=True)
             if self.request.user.groups.filter(name="manager").exists():
-                q = Car.objects.filter(buyer=request.user.id)
+                q = Car.objects.all().order_by("-shipment_date")
             elif self.request.user.groups.filter(name="client").exists():
-                q = Car.objects.filter(buyer=request.user.id)
+                q = Car.objects.filter(buyer__user=request.user.id).order_by(
+                    "-shipment_date"
+                )
             elif self.request.user.groups.filter(name="service company").exists():
-                q = Car.objects.filter(service_company=request.user.id)
+                q = Car.objects.filter(service_company__user=request.user.id).order_by(
+                    "-shipment_date"
+                )
             else:
                 s = LimitedCarSerializer(q, many=True)
+            s = CarSerializer(q, many=True)
         except Car.DoesNotExist:
             raise Http404
         return Response(s.data)
@@ -50,6 +60,7 @@ class MaitenanceViewSet(viewsets.ModelViewSet):
     queryset = Maitenance.objects.all()
     permission_classes = [permissions.DjangoModelPermissions]
     serializer_class = MaitenanceSerializer
+    ordering = ["-date"]
 
     def retrieve(self, request, pk=None):
         try:
@@ -69,11 +80,15 @@ class MaitenanceViewSet(viewsets.ModelViewSet):
         try:
             q = None
             if self.request.user.groups.filter(name="client").exists():
-                q = Maitenance.objects.filter(car__buyer=request.user.id)
+                q = Maitenance.objects.filter(
+                    car__buyer__user=request.user.id
+                ).order_by("-date")
             elif self.request.user.groups.filter(name="service company").exists():
-                q = Maitenance.objects.filter(service_company=request.user.id)
+                q = Maitenance.objects.filter(
+                    service_company__user=request.user.id
+                ).order_by("-date")
             elif self.request.user.groups.filter(name="manager").exists():
-                q = Maitenance.objects.all()
+                q = Maitenance.objects.all().order_by("-date")
             else:
                 return Response(status=HttpResponseForbidden)
             s = MaitenanceSerializer(q, many=True)
@@ -86,6 +101,7 @@ class RepairViewSet(viewsets.ModelViewSet):
     queryset = Repair.objects.all()
     serializer_class = RepairSerializer
     permission_classes = [permissions.DjangoModelPermissions]
+    ordering = ["-issue_date"]
 
     def retrieve(self, request, pk=None):
         try:
@@ -103,11 +119,17 @@ class RepairViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
-            q = Repair.objects.all()
+            q = None
             if self.request.user.groups.filter(name="client").exists():
-                q = Repair.objects.filter(car__buyer=request.user.id)
+                q = Repair.objects.filter(car__buyer__user=request.user.id).order_by(
+                    "-issue_date"
+                )
             elif self.request.user.groups.filter(name="service company").exists():
-                q = Repair.objects.filter(service_company=request.user.id)
+                q = Repair.objects.filter(
+                    service_company__user=request.user.id
+                ).order_by("-issue_date")
+            elif self.request.user.groups.filter(name="manager").exists():
+                q = Repair.objects.all().order_by("-issue_date")
             s = RepairSerializer(q, many=True)
         except Repair.DoesNotExist:
             raise Http404
@@ -125,7 +147,6 @@ class UserViewSet(viewsets.ModelViewSet):
             q = None
             s = None
             if self.request.user.groups.filter(name="client").exists():
-                print(self.request.user.groups.all())
                 q = Client.objects.get(user__id=request.user.id)
                 s = ClientSerializer(q, many=False)
             elif self.request.user.groups.filter(name="service company").exists():
@@ -139,6 +160,12 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(s.data)
 
 
+class ManualViewSet(viewsets.ModelViewSet):
+    queryset = Manual.objects.all()
+    serializer_class = ManualSerializer
+    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+
+
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
@@ -148,58 +175,4 @@ class ClientViewSet(viewsets.ModelViewSet):
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = ServiceCompany.objects.all()
     serializer_class = ServiceSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
-class CarModelViewSet(viewsets.ModelViewSet):
-    queryset = CarModel.objects.all()
-    serializer_class = CarModelSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
-class EngineModelViewSet(viewsets.ModelViewSet):
-    queryset = EngineModel.objects.all()
-    serializer_class = EngineModelSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
-class DrivingAxleModelViewSet(viewsets.ModelViewSet):
-    queryset = DrivingAxleModel.objects.all()
-    serializer_class = DrivingAxleModelSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
-class SteeringAxleModelViewSet(viewsets.ModelViewSet):
-    queryset = SteeringAxleModel.objects.all()
-    serializer_class = SteeringAxleModelSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
-class TransmissionModelViewSet(viewsets.ModelViewSet):
-    queryset = TransmissionModel.objects.all()
-    serializer_class = TransmissionModelSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
-class MaitenanceTypeViewSet(viewsets.ModelViewSet):
-    queryset = MaitenanceType.objects.all()
-    serializer_class = MaitenanceTypeSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
-class MaitenanceProviderViewSet(viewsets.ModelViewSet):
-    queryset = MaitenanceProvider.objects.all()
-    serializer_class = MaitenanceProviderSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
-class RepairMethodViewSet(viewsets.ModelViewSet):
-    queryset = RepairMethod.objects.all()
-    serializer_class = RepairMethodSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
-class RepairUnitViewSet(viewsets.ModelViewSet):
-    queryset = RepairUnit.objects.all()
-    serializer_class = RepairUnitSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
+    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]

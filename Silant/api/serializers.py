@@ -68,10 +68,12 @@ class CarSerializer(serializers.ModelSerializer):
 
 
 class MaitenanceSerializer(serializers.ModelSerializer):
+    car_serial_number = ReadOnlyField(source="car.serial_number")
     car_buyer_name = ReadOnlyField(source="car.buyer.name")
     car_buyer_description = ReadOnlyField(source="car.buyer.description")
     service_company_name = ReadOnlyField(source="service_company.name")
     service_company_description = ReadOnlyField(source="service_company.description")
+    type_name = ReadOnlyField(source="type.name")
 
     class Meta:
         model = Maitenance
@@ -79,10 +81,13 @@ class MaitenanceSerializer(serializers.ModelSerializer):
 
 
 class RepairSerializer(serializers.ModelSerializer):
+    car_serial_number = ReadOnlyField(source="car.serial_number")
     car_buyer_name = ReadOnlyField(source="car.buyer.name")
     car_buyer_description = ReadOnlyField(source="car.buyer.description")
     service_company_name = ReadOnlyField(source="service_company.name")
     service_company_description = ReadOnlyField(source="service_company.description")
+    method_name = ReadOnlyField(source="method.name")
+    unit_name = ReadOnlyField(source="unit.name")
 
     class Meta:
         model = Repair
@@ -107,9 +112,9 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class MaitenanceTypeSerializer(serializers.ModelSerializer):
+class ManualSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MaitenanceType
+        model = Manual
         fields = "__all__"
 
 

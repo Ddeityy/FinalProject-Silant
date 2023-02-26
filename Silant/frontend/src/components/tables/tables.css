@@ -6,7 +6,7 @@ table {
   }
   
   table caption {
-    font-size: 1em;
+    font-size: .75em;
   }
   
   table tr {
@@ -22,13 +22,13 @@ table {
   table th,
   table td {
     text-align: center;
+    overflow-wrap: break-word;
   }
   
   table th {
-    hyphens: auto;
     overflow-wrap: break-word;
-    font-size: .75em;
-    letter-spacing: .1em;
+    hyphens: auto;
+    font-size: .65em;
     text-transform: uppercase;
   }
 /*                                             
@@ -45,6 +45,7 @@ table {
       overflow: hidden;
       position: absolute;
       width: 1px;
+      overflow-wrap: normal;
     }
     
     table tr {
@@ -54,6 +55,7 @@ table {
     table, th, td {
         border: 1px solid #a7a7a7;
         border-collapse: collapse;
+        overflow-wrap: break-word;
     }
 
     table td {

@@ -116,23 +116,43 @@ def init_car_manuals():
     # car parts
     for i in car_usr:
         try:
-            CarModel.objects.create(name=car[f"B{i}"].value, description=lorem)
+            Manual.objects.create(
+                name=car[f"B{i}"].value,
+                description=lorem,
+                manual_type=Manual.ManualType.CAR_MODEL,
+            )
         except IntegrityError:
             pass
         try:
-            EngineModel.objects.create(name=car[f"D{i}"].value, description=lorem)
+            Manual.objects.create(
+                name=car[f"D{i}"].value,
+                description=lorem,
+                manual_type=Manual.ManualType.ENINGE_MODEL,
+            )
         except IntegrityError:
             pass
         try:
-            TransmissionModel.objects.create(name=car[f"F{i}"].value, description=lorem)
+            Manual.objects.create(
+                name=car[f"F{i}"].value,
+                description=lorem,
+                manual_type=Manual.ManualType.TRANSMISSION_MODEL,
+            )
         except IntegrityError:
             pass
         try:
-            DrivingAxleModel.objects.create(name=car[f"H{i}"].value, description=lorem)
+            Manual.objects.create(
+                name=car[f"H{i}"].value,
+                description=lorem,
+                manual_type=Manual.ManualType.DRIVING_AXLE_MODEL,
+            )
         except IntegrityError:
             pass
         try:
-            SteeringAxleModel.objects.create(name=car[f"J{i}"].value, description=lorem)
+            Manual.objects.create(
+                name=car[f"J{i}"].value,
+                description=lorem,
+                manual_type=Manual.ManualType.STEERING_AXLE_MODEL,
+            )
         except IntegrityError:
             pass
     print("Car manuals created")
@@ -172,11 +192,19 @@ def init_users():
 def init_repair_manuals():
     for i in rep_range:
         try:
-            RepairUnit.objects.create(name=rec[f"D{i}"].value, description=lorem)
+            Manual.objects.create(
+                name=rec[f"D{i}"].value,
+                description=lorem,
+                manual_type=Manual.ManualType.REPAIR_UNIT,
+            )
         except IntegrityError:
             pass
         try:
-            RepairMethod.objects.create(name=rec[f"F{i}"].value, description=lorem)
+            Manual.objects.create(
+                name=rec[f"F{i}"].value,
+                description=lorem,
+                manual_type=Manual.ManualType.REPAIR_METHOD,
+            )
         except IntegrityError:
             pass
     print("Repair manuals created")
@@ -185,12 +213,18 @@ def init_repair_manuals():
 def init_maitenance_manuals():
     for i in mtn_range:
         try:
-            MaitenanceType.objects.create(name=mtn[f"B{i}"].value, description=lorem)
+            Manual.objects.create(
+                name=mtn[f"B{i}"].value,
+                description=lorem,
+                manual_type=Manual.ManualType.MAITENANCE_TYPE,
+            )
         except IntegrityError:
             pass
         try:
-            MaitenanceProvider.objects.create(
-                name=mtn[f"G{i}"].value, description=lorem
+            Manual.objects.create(
+                name=mtn[f"G{i}"].value,
+                description=lorem,
+                manual_type=Manual.ManualType.MAITENANCE_PROVIDER,
             )
         except IntegrityError:
             pass
@@ -201,21 +235,15 @@ def init_cars():
     try:
         for i in car_usr:
             Car.objects.create(
-                model=CarModel.objects.get(name=car[f"B{i}"].value),
+                model=Manual.objects.get(name=car[f"B{i}"].value),
                 serial_number=car[f"C{i}"].value,
-                engine_model=EngineModel.objects.get(name=car[f"D{i}"].value),
+                engine_model=Manual.objects.get(name=car[f"D{i}"].value),
                 engine_serial_number=car[f"E{i}"].value,
-                transmission_model=TransmissionModel.objects.get(
-                    name=car[f"F{i}"].value
-                ),
+                transmission_model=Manual.objects.get(name=car[f"F{i}"].value),
                 transmission_serial_number=car[f"G{i}"].value,
-                driving_axle_model=DrivingAxleModel.objects.get(
-                    name=car[f"H{i}"].value
-                ),
+                driving_axle_model=Manual.objects.get(name=car[f"H{i}"].value),
                 driving_axle_serial_number=car[f"I{i}"].value,
-                steering_axle_model=SteeringAxleModel.objects.get(
-                    name=car[f"J{i}"].value
-                ),
+                steering_axle_model=Manual.objects.get(name=car[f"J{i}"].value),
                 steering_axle_serial_number=car[f"K{i}"].value,
                 shipment_date=car[f"L{i}"].value,
                 buyer=Client.objects.get(name=car[f"M{i}"].value),
@@ -233,14 +261,14 @@ def init_maitenance():
     for i in mtn_range:
         car = Car.objects.get(serial_number=mtn[f"A{i}"].value)
         if mtn[f"G{i}"].value == "самостоятельно":
-            p = MaitenanceProvider.objects.get(id=4)
+            p = Manual.objects.get(name="самостоятельно")
             s = True
         else:
-            p = MaitenanceProvider.objects.get(name=mtn[f"G{i}"].value)
+            p = Manual.objects.get(name=mtn[f"G{i}"].value)
             s = False
         try:
             Maitenance.objects.create(
-                type=MaitenanceType.objects.get(name=mtn[f"B{i}"].value),
+                type=Manual.objects.get(name=mtn[f"B{i}"].value),
                 date=mtn[f"C{i}"].value,
                 operating_time=mtn[f"D{i}"].value,
                 contract_serial_number=mtn[f"E{i}"].value,
@@ -262,9 +290,9 @@ def init_repairs():
             Repair.objects.create(
                 issue_date=rec[f"B{i}"].value,
                 operating_time=rec[f"C{i}"].value,
-                unit=RepairUnit.objects.get(name=rec[f"D{i}"].value),
+                unit=Manual.objects.get(name=rec[f"D{i}"].value),
                 description=rec[f"E{i}"].value,
-                method=RepairMethod.objects.get(name=rec[f"F{i}"].value),
+                method=Manual.objects.get(name=rec[f"F{i}"].value),
                 repair_parts=rec[f"G{i}"].value,
                 completion_date=rec[f"H{i}"].value,
                 repair_time=int((rec[f"H{i}"].value - rec[f"B{i}"].value).days),
