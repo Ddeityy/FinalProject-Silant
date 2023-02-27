@@ -12,7 +12,7 @@ const CarTable = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch(`../api/car/${id}/`, {
+      const response = await fetch(`http://127.0.0.1:8002/api/car/${id}/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -39,11 +39,13 @@ const CarTable = () => {
     car
   ) : (
     <div className="app-container">
-      <h1>Результат поиска:</h1>
       <div className="app-inner-container">
         <h1>
           Информация о комплектации и технических характеристиках Вашей техники
         </h1>
+      </div>
+      <div className="app-inner-container">
+        <h1>Результат поиска:</h1>
         <table>
           <thead>
             <tr>

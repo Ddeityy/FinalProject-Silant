@@ -8,8 +8,7 @@ from django.http import Http404
 
 
 # client 7
-# c_prhht4azvymvcwe
-
+# c_qnqj2mur7edwb3c
 # all methods
 class CarViewSet(viewsets.ModelViewSet):
     permission_classes = [
@@ -62,6 +61,15 @@ class MaitenanceViewSet(viewsets.ModelViewSet):
     serializer_class = MaitenanceSerializer
     ordering = ["-date"]
 
+    @action(detail=True)
+    def car(self, request, pk=None):
+        try:
+            q = Maitenance.objects.filter(car__serial_number=pk)
+            s = MaitenanceSerializer(q, many=True)
+        except Maitenance.DoesNotExist:
+            raise Http404
+        return Response(s.data)
+
     def retrieve(self, request, pk=None):
         try:
             q = Maitenance.objects.get(id=pk)
@@ -69,7 +77,7 @@ class MaitenanceViewSet(viewsets.ModelViewSet):
             if (
                 self.request.user.id == (q.car.buyer.id or q.service_company.id)
             ) or self.request.user.groups.filter(name="manager").exists():
-                s = CarSerializer(q)
+                s = MaitenanceSerializer(q)
             else:
                 Response(status=HttpResponseForbidden)
         except Maitenance.DoesNotExist:
@@ -102,6 +110,15 @@ class RepairViewSet(viewsets.ModelViewSet):
     serializer_class = RepairSerializer
     permission_classes = [permissions.DjangoModelPermissions]
     ordering = ["-issue_date"]
+
+    @action(detail=True)
+    def car(self, request, pk=None, *args, **kwargs):
+        try:
+            q = Repair.objects.filter(car__serial_number=pk)
+            s = RepairSerializer(q, many=True)
+        except Repair.DoesNotExist:
+            raise Http404
+        return Response(s.data)
 
     def retrieve(self, request, pk=None):
         try:

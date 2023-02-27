@@ -3,6 +3,7 @@
   }
   
   .react-tabs__tab-list {
+    border-radius: 25px;
     border-bottom: 1px solid #aaa;
     margin: 0 0 10px;
     padding: 0;
@@ -46,6 +47,7 @@
   }
   
   .react-tabs__tab-panel {
+    border-radius: 25px;
     display: none;
   }
   

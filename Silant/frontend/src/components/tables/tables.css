@@ -5,6 +5,10 @@ table {
     border-radius: 25px;
   }
   
+  table select {
+    width: 1.5em;
+  }
+
   table caption {
     font-size: .75em;
   }
@@ -39,6 +43,19 @@ table {
       font-size: 1.3em;
     }
     
+    table select {
+      width: 1.5em;
+    }
+
+    .select-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    table label {
+      margin: 0.25em;
+    }
+
     table thead {
       border-radius: 10px;
       height: 1px;
@@ -51,7 +68,9 @@ table {
     table tr {
       display: block;
     }
-    
+    table {
+      border: 1px 1px 2px 1px solid #a7a7a7
+    }
     table, th, td {
         border: 1px solid #a7a7a7;
         border-collapse: collapse;

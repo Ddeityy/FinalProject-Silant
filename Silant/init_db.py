@@ -57,15 +57,6 @@ manager_models = [
     ContentType.objects.get_for_model(Car),
     ContentType.objects.get_for_model(Repair),
     ContentType.objects.get_for_model(Maitenance),
-    ContentType.objects.get_for_model(CarModel),
-    ContentType.objects.get_for_model(EngineModel),
-    ContentType.objects.get_for_model(TransmissionModel),
-    ContentType.objects.get_for_model(DrivingAxleModel),
-    ContentType.objects.get_for_model(SteeringAxleModel),
-    ContentType.objects.get_for_model(MaitenanceType),
-    ContentType.objects.get_for_model(MaitenanceProvider),
-    ContentType.objects.get_for_model(RepairMethod),
-    ContentType.objects.get_for_model(RepairUnit),
 ]
 
 
