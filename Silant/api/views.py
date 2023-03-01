@@ -30,7 +30,8 @@ class CarViewSet(viewsets.ModelViewSet):
         q = Car.objects.get(serial_number=pk)
         try:
             s = CarSerializer(q, data=request.data, partial=True)
-            return s.data
+            s.is_valid()
+            return Response(s.data)
         except Car.DoesNotExist:
             raise Http404
 

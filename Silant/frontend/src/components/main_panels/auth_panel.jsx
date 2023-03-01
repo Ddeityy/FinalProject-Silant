@@ -49,6 +49,12 @@ const AuthPanel = (props) => {
               </Link>
             )}
           </Tab>
+          Справочники
+          {group === 2 && (
+            <Link to={"manual/create"}>
+              <button className="edit">➕</button>
+            </Link>
+          )}
         </TabList>
         <TabPanel>
           <AuthCarTable />

@@ -43,10 +43,7 @@ const AuthCarDetail = () => {
     <div className="app-container">
       <div className="app-field">
         <h3>Машина № {car.serial_number}</h3>
-        <Link to={`edit`} state={car.id}>
-          <button className="edit">🔧</button>
-        </Link>
-        <Link to={`delete`} state={car.id}>
+        <Link to={`delete`}>
           <button className="edit">✖</button>
         </Link>
       </div>

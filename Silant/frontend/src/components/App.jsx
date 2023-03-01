@@ -31,22 +31,18 @@ const App = () => {
           <Route path="/car/:id" element={<CarTable />} exact />
           <Route path="/car/create" element={<CarCreate />} />
           <Route path="/car/details/:id" element={<AuthCarDetail />} />
-          <Route path="/car/details/:id/edit" element={<Delete />} />
           <Route path="/car/details/:id/delete" element={<Delete />} />
 
           <Route path="/manual/:id" element={<GeneralManual />} />
           <Route path="/manual/create" element={<ManualCreate />} />
-          <Route path="/manual/:id/edit" element={<GeneralManual />} />
           <Route path="/manual/:id/delete" element={<Delete />} />
 
           <Route path="/maitenance/:id" element={<GeneralManual />} />
           <Route path="/maitenance/create" element={<MaitenanceCreate />} />
-          <Route path="/maitenance/:id/edit" element={<GeneralManual />} />
           <Route path="/maitenance/:id/delete" element={<Delete />} />
 
           <Route path="/repair/:id" element={<GeneralManual />} />
           <Route path="/repair/create" element={<RepairCreate />} />
-          <Route path="/repair/:id/edit" element={<GeneralManual />} />
           <Route path="/repair/:id/delete" element={<Delete />} />
         </Routes>
         <AppFooter />

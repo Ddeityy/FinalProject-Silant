@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SearchBar = () => {
@@ -17,7 +17,7 @@ const SearchBar = () => {
           </h3>
           <label>Введите заводской номер</label>
           <div className="app-inner-container">
-            <form className="app-form">
+            <form className="app-form" style={{ display: "flex" }}>
               <input
                 type="text"
                 placeholder="0001"
@@ -25,6 +25,7 @@ const SearchBar = () => {
                 required
                 onChange={onChange}
               />
+              <br />
               <Link to={`car/${query}`}>
                 <button type="submit">Поиск</button>
               </Link>

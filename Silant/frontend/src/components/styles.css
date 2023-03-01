@@ -165,19 +165,30 @@ a {
   border-style: hidden;
   background-color: #ebe6d6;
   margin: 7px;
-  padding: 3px;
   float: right;
   outline: none;
   text-align: center;
   font-size: small;
   width: 10em;
 }
+
+@-moz-document url-prefix() {
+  .app-form input[type=date] {
+    padding: 3px;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  .app-form input[type=date] {
+    padding: 2px;
+  }
+}
+
 .app-form input[type=date] {
   border-radius: 15px;
   border-style: hidden;
   background-color: #ebe6d6;
   margin: 7px;
-  padding: 2px;
   float: right;
   outline: none;
   text-align: center;
@@ -193,7 +204,7 @@ a {
   border-style: hidden;
   background-color: #ebe6d6;
   margin: 7px;
-  padding: 3px;
+  padding: 1px;
   outline: none;
   width: 10em;
   font-size: small;
@@ -204,7 +215,6 @@ a {
   border-style: hidden;
   background-color: #ebe6d6;
   margin: 7px;
-  padding: 3px;
   outline: none;
   text-align: center;
   font-size: small;

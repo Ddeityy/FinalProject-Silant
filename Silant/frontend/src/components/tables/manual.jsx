@@ -59,9 +59,6 @@ const GeneralManual = () => {
           </h1>
           {manager && (
             <>
-              <Link to={`edit`}>
-                <button className="edit">🔧</button>
-              </Link>
               <Link to={`delete`}>
                 <button className="edit">✖</button>
               </Link>

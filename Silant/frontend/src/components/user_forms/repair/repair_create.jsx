@@ -11,14 +11,20 @@ const RepairCreate = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    fetch("http://127.0.0.1:8002/api/maitenance/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(data),
-    }).then(window.location.replace("http://127.0.0.1:8002/"));
+    const submit = async () => {
+      const response = await fetch("http://127.0.0.1:8002/api/repair/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) {
+        window.location.replace("http://127.0.0.1:8002/");
+      }
+    };
+    submit();
   };
 
   const handleSelect = (data, t, name) => {
