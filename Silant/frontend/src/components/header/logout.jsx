@@ -35,14 +35,14 @@ const Logout = () => {
         <form className="app-form">
           <label>Вы уверены, что хотите выйти?</label>
           <br />
-          <input type="submit" value="Выйти" onClick={handleLogout} />
+          <input type="submit" value="Да" onClick={handleLogout} />
+          <input
+            type="submit"
+            value="Нет"
+            onClick={() => window.location.replace("http://127.0.0.1:8002/")}
+          />
         </form>
       )}
-      <form className="app-form">
-        <label>Вы уверены, что хотите выйти?</label>
-        <br />
-        <input type="submit" value="Выйти" onClick={handleLogout} />
-      </form>
     </div>
   );
 };

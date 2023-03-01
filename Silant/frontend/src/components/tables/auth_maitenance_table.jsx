@@ -52,7 +52,6 @@ const AuthMaitenanceTable = () => {
         setLoading(false);
       } else {
         const jdata = await response.json();
-        console.log(jdata);
         if (jdata === []) {
           const message = "ТО не найдено";
           setMaitenance(message);

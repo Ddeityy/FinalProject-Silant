@@ -1,17 +1,168 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const CarCreate = () => {
+  const [manuals, setManuals] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => console.log(data);
+
+  const onSubmit = (data) => {
+    fetch("http://127.0.0.1:8002/api/car/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(data),
+    }).then(window.location.replace("http://127.0.0.1:8002/"));
+  };
+
+  const handleSelect = (data, t, name) => {
+    return data.filter((i) => i[t] === name);
+  };
+
+  useEffect(() => {
+    const fetchManuals = async () => {
+      const response = await fetch("http://127.0.0.1:8002/api/manual/");
+      const data = await response.json();
+      setManuals(data);
+    };
+    const fetchClients = async () => {
+      const response = await fetch("http://127.0.0.1:8002/api/client/");
+      const data = await response.json();
+      setClients(data);
+    };
+    const fetchCompanies = async () => {
+      const response = await fetch(
+        "http://127.0.0.1:8002/api/service-company/"
+      );
+      const data = await response.json();
+      setCompanies(data);
+    };
+    fetchManuals();
+    fetchClients();
+    fetchCompanies();
+    setLoading(false);
+  }, []);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("firstName", { required: true, maxLength: 20 })} />
-      <input {...register("lastName", { pattern: /^[A-Za-z]+$/i })} />
-      <input type="number" {...register("age", { min: 18, max: 99 })} />
-      <input type="submit" />
-    </form>
+    !loading && (
+      <div className="app-container">
+        <form onSubmit={handleSubmit(onSubmit)} className="app-form">
+          <label>Зав. № машины</label>
+          <input {...register("serial_number")} />
+          <br />
+          <label>Модель техники</label>
+          <select required {...register("model")}>
+            <option value=""></option>
+            {handleSelect(manuals, "manual_type", "Модель техники").map(
+              (model) => (
+                <option key={model.id} value={model.id}>
+                  {model.name}
+                </option>
+              )
+            )}
+          </select>
+          <br />
+          <label>Модель двигателя</label>
+          <select required {...register("engine_model")}>
+            <option value=""></option>
+            {handleSelect(manuals, "manual_type", "Двигатель").map((model) => (
+              <option key={model.id} value={model.id}>
+                {model.name}
+              </option>
+            ))}
+          </select>
+          <br />
+          <label>Зав № двигателя</label>
+          <input {...register("engine_serial_number")} />
+          <br />
+          <label>Трансмиссия</label>
+          <select required {...register("transmission_model")}>
+            <option value=""></option>
+            {handleSelect(manuals, "manual_type", "Трансмиссия").map(
+              (model) => (
+                <option key={model.id} value={model.id}>
+                  {model.name}
+                </option>
+              )
+            )}
+          </select>
+          <br />
+          <label>Зав № трансмиссии</label>
+          <input {...register("transmission_serial_number")} />
+          <br />
+          <label>Вед. мост</label>
+          <select required {...register("driving_axle_model")}>
+            <option value=""></option>
+            {handleSelect(manuals, "manual_type", "Ведущий мост").map(
+              (model) => (
+                <option key={model.id} value={model.id}>
+                  {model.name}
+                </option>
+              )
+            )}
+          </select>
+          <br />
+          <label>Зав № вед. моста</label>
+          <input {...register("driving_axle_serial_number")} />
+          <br />
+          <label>Упр. мост</label>
+          <select required {...register("steering_axle_model")}>
+            <option value=""></option>
+            {handleSelect(manuals, "manual_type", "Ведущий мост").map(
+              (model) => (
+                <option key={model.id} value={model.id}>
+                  {model.name}
+                </option>
+              )
+            )}
+          </select>
+          <br />
+          <label>Зав № упр. моста</label>
+          <input {...register("steering_axle_serial_number")} />
+          <br />
+
+          <label>Дата отгрузки</label>
+          <input {...register("shipment_date")} type="date" />
+          <br />
+
+          <label>Покупатель</label>
+          <select required {...register("buyer")}>
+            <option value=""></option>
+            {clients.map((model) => (
+              <option key={model.id} value={model.id}>
+                {model.name}
+              </option>
+            ))}
+          </select>
+          <br />
+          <label>Грузополучатель</label>
+          <input {...register("consignee")} />
+          <br />
+          <label>Адрес поставки</label>
+          <input {...register("delivery_adress")} />
+          <br />
+          <label>Комплектация</label>
+          <input {...register("additional_equipment")} />
+          <br />
+          <label>Сервисная компания</label>
+          <select required {...register("service_company")}>
+            <option value=""></option>
+            {companies.map((model) => (
+              <option key={model.id} value={model.id}>
+                {model.name}
+              </option>
+            ))}
+          </select>
+          <br />
+          <button type="submit">Отправить</button>
+        </form>
+      </div>
+    )
   );
 };
 

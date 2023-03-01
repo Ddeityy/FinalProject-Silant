@@ -1,13 +1,15 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Delete = () => {
   const { id } = useParams();
-  console.log(location.pathname);
+  const model = window.location.pathname.split("/")[1];
+  const [data, setData] = useState([]);
+  const [entity, setEntity] = useState([]);
 
-  const handleYes = () => {
-    fetch(`http://127.0.0.1:8002/api/car/${id}/`, {
-      method: "DELETE",
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8002/api/${model}/${id}/`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Token ${localStorage.getItem("token")}`,
@@ -15,9 +17,37 @@ const Delete = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        window.location.replace("http://127.0.0.1:8002/");
+        switch (model) {
+          case "car":
+            setEntity("машины");
+            setData(data.serial_number);
+            break;
+          case "manual":
+            setEntity("справочника");
+            setData(data.name);
+            break;
+          case "repair":
+            setEntity("ТО от");
+            setData(data.contract_date);
+            break;
+          case "maitenance":
+            setEntity("рекламации");
+            setData(data.issue_date);
+            break;
+        }
       });
+  }, []);
+
+  const handleYes = () => {
+    fetch(`http://127.0.0.1:8002/api/${model}/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.getItem("token")}`,
+      },
+    }).then(() => {
+      window.location.replace("http://127.0.0.1:8002/");
+    });
   };
 
   const handleNo = () => {
@@ -25,11 +55,24 @@ const Delete = () => {
   };
 
   return (
-    <>
-      <h1>Вы уверены?</h1>
-      <button onClick={handleYes}>Да</button>
-      <button onClick={handleNo}>Нет</button>
-    </>
+    data && (
+      <div className="app-inner-container" style={{ display: "block" }}>
+        <label>
+          Удаление {entity} {data}.
+        </label>
+        <br />
+        <label> Вы уверены?</label>
+        <br />
+        <div>
+          <button style={{ margin: ".5em" }} onClick={handleYes}>
+            Да
+          </button>
+          <button style={{ margin: ".5em" }} onClick={handleNo}>
+            Нет
+          </button>
+        </div>
+      </div>
+    )
   );
 };
 

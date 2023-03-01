@@ -5,8 +5,33 @@ import AuthPanel from "./auth_panel.jsx";
 const GeneralPanel = () => {
   const [userData, setUserData] = useState([]);
   const [Auth, setAuth] = useState([]);
+  const [userType, setUserType] = useState([]);
+  const [username, setUsername] = useState([]);
 
   useEffect(() => {
+    const fetchUserName = async (id, group) => {
+      let g;
+      switch (group) {
+        case 1:
+          g = "client";
+          break;
+        case 2:
+          g = "manager";
+          break;
+        case 3:
+          g = "service-company";
+          break;
+      }
+      const data = await fetch(`http://127.0.0.1:8002/api/${g}/${id}/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${localStorage.getItem("token")}`,
+        },
+      });
+      const jdata = await data.json();
+      setUsername(jdata.name);
+    };
     const fetchUserData = async () => {
       const data = await fetch(`http://127.0.0.1:8002/api/user/current/`, {
         method: "GET",
@@ -17,8 +42,9 @@ const GeneralPanel = () => {
       });
 
       const jdata = await data.json();
-      console.log(jdata);
       setUserData(jdata);
+      setUserType(jdata.groups[0]);
+      fetchUserName(jdata.id, jdata.groups[0]);
       setAuth(true);
     };
     if (localStorage.getItem("token") === null) {
@@ -42,9 +68,9 @@ const GeneralPanel = () => {
     <div className="app-container">
       {Auth ? (
         <>
-          <h2 className="app-inner-container">{userData.name}</h2>
+          <h2 className="app-inner-container">{username}</h2>
           <div className="app-inner-container">
-            <AuthPanel />
+            <AuthPanel group={userType} />
           </div>
         </>
       ) : (

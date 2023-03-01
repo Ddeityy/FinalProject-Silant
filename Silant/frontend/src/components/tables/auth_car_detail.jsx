@@ -33,7 +33,6 @@ const AuthCarDetail = () => {
       }
     }
     fetchData();
-    console.log("aaa" + id);
   }, []);
 
   return loading ? (
@@ -43,7 +42,13 @@ const AuthCarDetail = () => {
   ) : (
     <div className="app-container">
       <div className="app-field">
-        <h2>Машина № {car.serial_number}</h2>
+        <h3>Машина № {car.serial_number}</h3>
+        <Link to={`edit`} state={car.id}>
+          <button className="edit">🔧</button>
+        </Link>
+        <Link to={`delete`} state={car.id}>
+          <button className="edit">✖</button>
+        </Link>
       </div>
       <div className="app-inner-container">
         <h1>
@@ -52,7 +57,7 @@ const AuthCarDetail = () => {
 
         <Tabs>
           <TabList>
-            <Tab>Машины</Tab>
+            <Tab>Общая информация</Tab>
             <Tab>ТО</Tab>
             <Tab>Рекламации</Tab>
           </TabList>
@@ -127,9 +132,6 @@ const AuthCarDetail = () => {
             <AuthRepairTable />
           </TabPanel>
         </Tabs>
-        <Link to={`delete`}>
-          <button>Delete</button>
-        </Link>
       </div>
     </div>
   );

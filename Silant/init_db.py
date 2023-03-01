@@ -57,6 +57,7 @@ manager_models = [
     ContentType.objects.get_for_model(Car),
     ContentType.objects.get_for_model(Repair),
     ContentType.objects.get_for_model(Maitenance),
+    ContentType.objects.get_for_model(Manual),
 ]
 
 
@@ -302,6 +303,7 @@ def init_test_manager():
         user.groups.add(m)
         user.set_password("password")
         user.save()
+        Manager.objects.create(name="Менеджер", user=user, description=lorem)
         print("Manager created")
     except IntegrityError:
         pass

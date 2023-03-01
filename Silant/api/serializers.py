@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ReadOnlyField
 from app.models import *
+from django.contrib.auth.models import Group
 
 AUTH_FIELDS = [
     "shipment_date",
@@ -97,7 +98,7 @@ class RepairSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ["id", "groups", "username"]
 
 
 class ServiceSerializer(serializers.ModelSerializer):
@@ -109,6 +110,12 @@ class ServiceSerializer(serializers.ModelSerializer):
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
+        fields = "__all__"
+
+
+class ManagerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Manager
         fields = "__all__"
 
 

@@ -18,6 +18,22 @@ class CarViewSet(viewsets.ModelViewSet):
     serializer_class = CarSerializer
     ordering = ["-shipment_date"]
 
+    def destroy(self, request, pk=None):
+        try:
+            car = Car.objects.get(serial_number=pk)
+            car.delete()
+            return Response(status=204)
+        except Car.DoesNotExist:
+            raise Http404
+
+    def partial_update(self, request, pk=None, *args, **kwargs):
+        q = Car.objects.get(serial_number=pk)
+        try:
+            s = CarSerializer(q, data=request.data, partial=True)
+            return s.data
+        except Car.DoesNotExist:
+            raise Http404
+
     def retrieve(self, request, pk=None):
         try:
             q = Car.objects.get(serial_number=pk)
@@ -156,7 +172,7 @@ class RepairViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
+    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
 
     @action(detail=False, methods=["get"])
     def current(self, request):
@@ -164,11 +180,11 @@ class UserViewSet(viewsets.ModelViewSet):
             q = None
             s = None
             if self.request.user.groups.filter(name="client").exists():
-                q = Client.objects.get(user__id=request.user.id)
-                s = ClientSerializer(q, many=False)
+                q = User.objects.get(id=request.user.id)
+                s = UserSerializer(q, many=False)
             elif self.request.user.groups.filter(name="service company").exists():
-                q = ServiceCompany.objects.get(user__id=request.user.id)
-                s = ServiceSerializer(q, many=False)
+                q = User.objects.get(id=request.user.id)
+                s = UserSerializer(q, many=False)
             else:
                 q = User.objects.get(id=request.user.id)
                 s = UserSerializer(q, many=False)
@@ -183,13 +199,34 @@ class ManualViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
 
 
+class ManagerViewSet(viewsets.ModelViewSet):
+    queryset = Manager.objects.all()
+    serializer_class = ManagerSerializer
+    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        q = Manager.objects.get(user=pk)
+        s = ManagerSerializer(q)
+        return Response(s.data)
+
+
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
+    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        q = Client.objects.get(user=pk)
+        s = ClientSerializer(q)
+        return Response(s.data)
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = ServiceCompany.objects.all()
     serializer_class = ServiceSerializer
     permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        q = ServiceCompany.objects.get(user=pk)
+        s = ServiceSerializer(q)
+        return Response(s.data)

@@ -28,6 +28,19 @@ class Client(models.Model):
         return self.name
 
 
+class Manager(models.Model):
+    class Meta:
+        verbose_name = "Менеджер"
+        verbose_name_plural = "Менеджеры"
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.TextField(unique=True)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Manual(models.Model):
     class ManualType(models.TextChoices):
         CAR_MODEL = "Модель техники"
@@ -37,8 +50,8 @@ class Manual(models.Model):
         STEERING_AXLE_MODEL = "Управляемый мост"
         MAITENANCE_TYPE = "Тип ТО"
         MAITENANCE_PROVIDER = "Компания"
-        REPAIR_METHOD = "Способ ремонта"
-        REPAIR_UNIT = "Узел ремонта"
+        REPAIR_METHOD = "Способ восстановления"
+        REPAIR_UNIT = "Узел отказа"
 
     class Meta:
         verbose_name = "Справочник"
@@ -138,6 +151,7 @@ class Maitenance(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Организация, проводившая ТО",
         related_name="maitenance_provider",
+        null=True,
     )
     car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Зав. № машины")
     service_company = models.ForeignKey(
@@ -146,7 +160,6 @@ class Maitenance(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Сервисная компания",
         null=True,
-        blank=True,
     )
 
     def __str__(self):
@@ -194,7 +207,10 @@ class Repair(models.Model):
     )
     car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Машина")
     service_company = models.ForeignKey(
-        ServiceCompany, on_delete=models.CASCADE, verbose_name="Сервисная компания"
+        ServiceCompany,
+        on_delete=models.CASCADE,
+        verbose_name="Сервисная компания",
+        null=True,
     )
 
     # Automatically assign the correct service company and repair date

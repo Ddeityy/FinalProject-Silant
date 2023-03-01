@@ -33,8 +33,10 @@ html * {
   .app-container {
     width: 90%;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: auto;    
   }
+
+
 }
 
 @media only screen and (min-width: 864px) {
@@ -101,7 +103,7 @@ a {
 }
 
 .app-container {
-  display: inline-flexbox;
+  display: flexbox;
   align-items: center;
   justify-content: center;
   background-color: #163e6c;
@@ -143,7 +145,7 @@ a {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     background-color: #163e6c;
     border-radius: 10px;
     text-align: center;
@@ -151,10 +153,9 @@ a {
 
 .app-form {
     background-color: #163e6c;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    box-sizing: border-box;
+    display: inline-block;;
+    justify-content: space-around;
+    box-sizing: content-box;
     border-radius: 25px;
     align-items: center;
 }
@@ -165,29 +166,76 @@ a {
   background-color: #ebe6d6;
   margin: 7px;
   padding: 3px;
+  float: right;
   outline: none;
   text-align: center;
-  font-size: medium;
+  font-size: small;
+  width: 10em;
 }
-
-.app-form button {
+.app-form input[type=date] {
   border-radius: 15px;
   border-style: hidden;
   background-color: #ebe6d6;
   margin: 7px;
-  padding: 3px;
+  padding: 2px;
+  float: right;
   outline: none;
   text-align: center;
+  font-size: small;
+  width: 10em;
 }
 
 .app-form label {
   border-radius: 15px;
+  display:block;
+  margin-bottom: 2px;
+  float: left;
   border-style: hidden;
   background-color: #ebe6d6;
   margin: 7px;
   padding: 3px;
   outline: none;
+  width: 10em;
+  font-size: small;
 }
+
+.app-form select {
+  border-radius: 15px;
+  border-style: hidden;
+  background-color: #ebe6d6;
+  margin: 7px;
+  padding: 3px;
+  outline: none;
+  text-align: center;
+  font-size: small;
+  width:10em;
+}
+
+.edit {
+  width: 1.77em;
+  height: 1.77em;
+  border-radius: 15px;
+  border-style: hidden;
+  background-color: #D20A11;
+  margin: 7px;
+  padding: 3px;
+  outline: none;
+  text-align: center;
+  justify-content: center;
+}
+
+.app-form button {
+  font-size: medium;
+  border-radius: 15px;
+  border-style: hidden;
+  background-color: #ebe6d6;
+  margin: 7px;
+  padding: 5px;
+  outline: none;
+  text-align: center;
+  align-self: center;
+}
+
 
 .app-table {
   overflow-x: auto;

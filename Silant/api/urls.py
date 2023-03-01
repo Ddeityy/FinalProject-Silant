@@ -20,6 +20,7 @@ schema_view = get_schema_view(
 
 router = DefaultRouter()
 router.register(r"car", CarViewSet)
+router.register(r"manager", ManagerViewSet)
 router.register(r"user", UserViewSet)
 router.register(r"client", ClientViewSet)
 router.register(r"service-company", ServiceViewSet)
