@@ -8,6 +8,7 @@ const AuthMaitenanceTable = () => {
   const [permState, setPermState] = useState([]);
 
   const { id } = useParams();
+
   let url;
 
   if (id === undefined) {
@@ -15,6 +16,7 @@ const AuthMaitenanceTable = () => {
   } else {
     url = `http://127.0.0.1:8002/api/maitenance/${id}/car`;
   }
+
   const handleFilter = (value, name) => {
     if (value === "сброс") {
       setMaitenance(permState);
@@ -65,6 +67,7 @@ const AuthMaitenanceTable = () => {
     }
     fetchData();
   }, []);
+
   return loading ? (
     <div>Loading...</div>
   ) : error ? (

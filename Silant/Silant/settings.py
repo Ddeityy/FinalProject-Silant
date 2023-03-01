@@ -80,6 +80,7 @@ ACCOUNT_ADAPTER = "app.adapter.NoNewUsersAccountAdapter"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8002",
+    "http://localhost:8001",
 ]
 
 MIDDLEWARE = [

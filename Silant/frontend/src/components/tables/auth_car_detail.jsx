@@ -127,6 +127,9 @@ const AuthCarDetail = () => {
             <AuthRepairTable />
           </TabPanel>
         </Tabs>
+        <Link to={`delete`}>
+          <button>Delete</button>
+        </Link>
       </div>
     </div>
   );

@@ -35,6 +35,7 @@ const AuthRepairTable = () => {
     let result = [...new Set(unique)];
     return result;
   };
+
   useEffect(() => {
     async function fetchData() {
       const response = await fetch(url, {
@@ -66,6 +67,7 @@ const AuthRepairTable = () => {
     }
     fetchData();
   }, []);
+
   return loading ? (
     <div>Loading...</div>
   ) : error ? (

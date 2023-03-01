@@ -10,6 +10,7 @@ import GeneralManual from "./tables/manual.jsx";
 import AuthCarDetail from "./tables/auth_car_detail.jsx";
 import Company from "./tables/company.jsx";
 import "./styles.css";
+import Delete from "./user_forms/generic_delete.jsx";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/" element={<GeneralPanel />} exact />
           <Route path="/company/:id" element={<Company />} exact />
           <Route path="/car/:id" element={<CarTable />} exact />
+          <Route path="/car/details/:id/delete" element={<Delete />} />
           <Route path="/car/details/:id" element={<AuthCarDetail />} />
           <Route path="/manual/:id" element={<GeneralManual />} />
         </Routes>
