@@ -37,10 +37,10 @@ const ManualCreate = () => {
     <div className="app-container">
       <form onSubmit={handleSubmit(onSubmit)} className="app-form">
         <label>Название</label>
-        <input {...register("name")} />
+        <input required {...register("name")} />
         <br />
         <label>Описание</label>
-        <input {...register("description")} />
+        <input required {...register("description")} />
         <br />
         <label>Тип справочника</label>
         <select required {...register("manual_type")}>

@@ -15,7 +15,6 @@ const SearchBar = () => {
           <h3>
             Проверьте комплектацию и технические характеристики техники Силант
           </h3>
-          <label>Введите заводской номер</label>
           <div className="app-inner-container">
             <form className="app-form" style={{ display: "flex" }}>
               <input

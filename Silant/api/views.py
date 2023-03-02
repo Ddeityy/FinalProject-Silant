@@ -26,15 +26,6 @@ class CarViewSet(viewsets.ModelViewSet):
         except Car.DoesNotExist:
             raise Http404
 
-    def partial_update(self, request, pk=None, *args, **kwargs):
-        q = Car.objects.get(serial_number=pk)
-        try:
-            s = CarSerializer(q, data=request.data, partial=True)
-            s.is_valid()
-            return Response(s.data)
-        except Car.DoesNotExist:
-            raise Http404
-
     def retrieve(self, request, pk=None):
         try:
             q = Car.objects.get(serial_number=pk)

@@ -59,7 +59,7 @@ const CarCreate = () => {
       <div className="app-container">
         <form onSubmit={handleSubmit(onSubmit)} className="app-form">
           <label>Зав. № машины</label>
-          <input {...register("serial_number")} />
+          <input required {...register("serial_number")} />
           <br />
           <label>Модель техники</label>
           <select required {...register("model")}>
@@ -84,7 +84,7 @@ const CarCreate = () => {
           </select>
           <br />
           <label>Зав № двигателя</label>
-          <input {...register("engine_serial_number")} />
+          <input required {...register("engine_serial_number")} />
           <br />
           <label>Трансмиссия</label>
           <select required {...register("transmission_model")}>
@@ -99,7 +99,7 @@ const CarCreate = () => {
           </select>
           <br />
           <label>Зав № трансмиссии</label>
-          <input {...register("transmission_serial_number")} />
+          <input required {...register("transmission_serial_number")} />
           <br />
           <label>Вед. мост</label>
           <select required {...register("driving_axle_model")}>
@@ -114,7 +114,7 @@ const CarCreate = () => {
           </select>
           <br />
           <label>Зав № вед. моста</label>
-          <input {...register("driving_axle_serial_number")} />
+          <input required {...register("driving_axle_serial_number")} />
           <br />
           <label>Упр. мост</label>
           <select required {...register("steering_axle_model")}>
@@ -129,11 +129,11 @@ const CarCreate = () => {
           </select>
           <br />
           <label>Зав № упр. моста</label>
-          <input {...register("steering_axle_serial_number")} />
+          <input required {...register("steering_axle_serial_number")} />
           <br />
 
           <label>Дата отгрузки</label>
-          <input {...register("shipment_date")} type="date" />
+          <input required {...register("shipment_date")} type="date" />
           <br />
 
           <label>Покупатель</label>
@@ -147,13 +147,13 @@ const CarCreate = () => {
           </select>
           <br />
           <label>Грузополучатель</label>
-          <input {...register("consignee")} />
+          <input required {...register("consignee")} />
           <br />
           <label>Адрес поставки</label>
-          <input {...register("delivery_adress")} />
+          <input required {...register("delivery_adress")} />
           <br />
           <label>Комплектация</label>
-          <input {...register("additional_equipment")} />
+          <input required {...register("additional_equipment")} />
           <br />
           <label>Сервисная компания</label>
           <select required {...register("service_company")}>

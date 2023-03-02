@@ -4,8 +4,6 @@ import { useForm } from "react-hook-form";
 const RepairCreate = () => {
   const [manuals, setManuals] = useState([]);
   const [cars, setCars] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const { register, handleSubmit } = useForm();
@@ -54,27 +52,8 @@ const RepairCreate = () => {
       const data = await response.json();
       setCars(data);
     };
-    const fetchClients = async () => {
-      const response = await fetch("http://127.0.0.1:8002/api/client/", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${localStorage.getItem("token")}`,
-        },
-      });
-      const data = await response.json();
-      setClients(data);
-    };
-    const fetchCompanies = async () => {
-      const response = await fetch(
-        "http://127.0.0.1:8002/api/service-company/"
-      );
-      const data = await response.json();
-      setCompanies(data);
-    };
+
     fetchManuals();
-    fetchClients();
-    fetchCompanies();
     fetchCars();
     setLoading(false);
   }, []);
@@ -87,25 +66,25 @@ const RepairCreate = () => {
           <select required {...register("car")}>
             <option value=""></option>
             {cars.map((model) => (
-              <option key={model.id} value={model.serial_number}>
+              <option key={model.id} value={model.id}>
                 {model.serial_number}
               </option>
             ))}
           </select>
           <br />
           <label>Дата отказа</label>
-          <input {...register("issue_date")} type="date" />
+          <input required {...register("issue_date")} type="date" />
           <br />
           <label>Наработка м/час</label>
-          <input {...register("operating_time")} />
+          <input required {...register("operating_time")} />
           <br />
 
           <label>Узел отказа</label>
-          <select required {...register("type")}>
+          <select required {...register("unit")}>
             <option value=""></option>
             {handleSelect(manuals, "manual_type", "Узел отказа").map(
               (model) => (
-                <option key={model.id} value={model.manual_type}>
+                <option key={model.id} value={model.id}>
                   {model.name}
                 </option>
               )
@@ -113,14 +92,14 @@ const RepairCreate = () => {
           </select>
           <br />
           <label>Описание возврата</label>
-          <input {...register("description")} />
+          <input required {...register("description")} />
           <br />
           <label style={{ fontSize: "small" }}>Способ восст.</label>
-          <select required {...register("type")}>
+          <select required {...register("method")}>
             <option value=""></option>
             {handleSelect(manuals, "manual_type", "Способ восстановления").map(
               (model) => (
-                <option key={model.id} value={model.manual_type}>
+                <option key={model.id} value={model.id}>
                   {model.name}
                 </option>
               )
@@ -128,10 +107,10 @@ const RepairCreate = () => {
           </select>
           <br />
           <label style={{ fontSize: "small" }}>Запчасти</label>
-          <input {...register("repair_parts")} />
+          <input required {...register("repair_parts")} />
           <br />
           <label>Дата восстановления</label>
-          <input {...register("completion_date")} type="date" />
+          <input required {...register("completion_date")} type="date" />
           <br />
           <button type="submit">Отправить</button>
         </form>

@@ -5,45 +5,57 @@ const Logout = () => {
 
   useEffect(() => {
     if (localStorage.getItem("token") == null) {
-      setIsAuth(true);
+      setIsAuth(false);
       window.location.replace("http://127.0.0.1:8002/");
     } else {
-      setIsAuth(false);
+      setIsAuth(true);
     }
   }, []);
 
   const handleLogout = (e) => {
     e.preventDefault();
-    fetch("http://127.0.0.1:8002/api/auth/logout/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        localStorage.clear();
-        window.location.replace("http://127.0.0.1:8002/");
+    const logout = async () => {
+      await fetch("http://127.0.0.1:8002/api/auth/logout/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${localStorage.getItem("token")}`,
+        },
       });
+      localStorage.clear();
+      window.localStorage.clear();
+      setIsAuth(false);
+      window.location.replace("http://127.0.0.1:8002/");
+    };
+    logout();
   };
 
   return (
-    <div className="app-container">
-      {isAuth && (
-        <form className="app-form">
+    <>
+      <div children="app-container">
+        <div className="app-inner-container">
           <label>Вы уверены, что хотите выйти?</label>
-          <br />
-          <input type="submit" value="Да" onClick={handleLogout} />
-          <input
-            type="submit"
-            value="Нет"
-            onClick={() => window.location.replace("http://127.0.0.1:8002/")}
-          />
-        </form>
-      )}
-    </div>
+        </div>
+      </div>
+      <div className="app-container">
+        {isAuth && (
+          <form className="app-form" style={{ justifyItems: "center" }}>
+            <input
+              type="submit"
+              value="Да"
+              onClick={handleLogout}
+              style={{ float: "right" }}
+            />
+            <input
+              type="submit"
+              value="Нет"
+              onClick={() => window.location.replace("http://127.0.0.1:8002/")}
+              style={{ float: "left" }}
+            />
+          </form>
+        )}
+      </div>
+    </>
   );
 };
 

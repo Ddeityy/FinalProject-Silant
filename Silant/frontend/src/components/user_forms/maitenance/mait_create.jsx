@@ -69,7 +69,7 @@ const MaitenanceCreate = () => {
           <select required {...register("car")}>
             <option value=""></option>
             {cars.map((model) => (
-              <option key={model.id} value={model.serial_number}>
+              <option key={model.id} value={model.id}>
                 {model.serial_number}
               </option>
             ))}
@@ -79,23 +79,26 @@ const MaitenanceCreate = () => {
           <select required {...register("type")}>
             <option value=""></option>
             {handleSelect(manuals, "manual_type", "Тип ТО").map((model) => (
-              <option key={model.id} value={model.type}>
+              <option key={model.id} value={model.id}>
                 {model.name}
               </option>
             ))}
           </select>
           <br />
           <label>Наработка м/час</label>
-          <input {...register("operating_time")} />
+          <input required {...register("operating_time")} />
           <br />
           <label>Дата ТО</label>
-          <input {...register("date")} type="date" />
+          <input required {...register("date")} type="date" />
           <br />
           <label>№ заказ-наряда</label>
-          <input {...register("contract_serial_number")} />
+          <input required {...register("contract_serial_number")} />
           <br />
           <label>Дата заказ-наряда</label>
-          <input {...register("contract_date")} type="date" />
+          <input required {...register("contract_date")} type="date" />
+          <br />
+          <label>Самостоятельное ТО</label>
+          <input {...register("self_maitenance")} type="checkbox" />
           <br />
           <button type="submit">Отправить</button>
         </form>
