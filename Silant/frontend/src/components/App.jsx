@@ -37,11 +37,9 @@ const App = () => {
           <Route path="/manual/create" element={<ManualCreate />} />
           <Route path="/manual/:id/delete" element={<Delete />} />
 
-          <Route path="/maitenance/:id" element={<GeneralManual />} />
           <Route path="/maitenance/create" element={<MaitenanceCreate />} />
           <Route path="/maitenance/:id/delete" element={<Delete />} />
 
-          <Route path="/repair/:id" element={<GeneralManual />} />
           <Route path="/repair/create" element={<RepairCreate />} />
           <Route path="/repair/:id/delete" element={<Delete />} />
         </Routes>

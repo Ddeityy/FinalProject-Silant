@@ -206,7 +206,7 @@ const AuthMaitenanceTable = () => {
 
               <td data-label="Дата проведения">{m.date}</td>
 
-              <td data-label="Наработка, м/час<">{m.operating_time}</td>
+              <td data-label="Наработка, м/час">{m.operating_time}</td>
 
               <td data-label="№ Заказ-наряда">{m.contract_serial_number}</td>
 

@@ -5,6 +5,7 @@ import AuthMaitenanceTable from "../tables/auth_maitenance_table.jsx";
 import AuthRepairTable from "../tables/auth_repair_table.jsx";
 import AuthCarTable from "../tables/auth_car_table.jsx";
 import "./tabs.css";
+import AuthManualTable from "../tables/auth_manual_table.jsx";
 
 const AuthPanel = (props) => {
   const [button, setButton] = useState(0);
@@ -50,12 +51,14 @@ const AuthPanel = (props) => {
             )}
           </Tab>
           {group === 2 && (
-            <>
-              Справочники
-              <Link to={"manual/create"}>
-                <button className="edit">➕</button>
-              </Link>
-            </>
+            <Tab>
+              <>
+                Справочники
+                <Link to={"manual/create"}>
+                  <button className="edit">➕</button>
+                </Link>
+              </>
+            </Tab>
           )}
         </TabList>
         <TabPanel>
@@ -67,6 +70,11 @@ const AuthPanel = (props) => {
         <TabPanel>
           <AuthRepairTable />
         </TabPanel>
+        {group === 2 && (
+          <TabPanel>
+            <AuthManualTable />
+          </TabPanel>
+        )}
       </Tabs>
     </div>
   );
